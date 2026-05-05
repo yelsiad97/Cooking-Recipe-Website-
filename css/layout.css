@@ -1,0 +1,169 @@
+/* ========================
+   CONTAINER
+======================== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========================
+   HEADER
+======================== */
+header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-nav);
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-sm);
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+/* SEARCH BAR */
+.search-bar {
+  flex: 1;
+  margin: 0 var(--space-lg);
+}
+
+.search-bar input {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+/* NAV LINKS */
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+}
+
+/* ========================
+   HERO SECTION
+======================== */
+.hero {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.hero-image img {
+  border-radius: var(--radius-lg);
+}
+
+.sidebar {
+  background: var(--bg-secondary);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+}
+
+/* ========================
+   FEATURED GRID
+======================== */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ========================
+   RECIPES PAGE LAYOUT
+======================== */
+.page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: var(--space-lg);
+}
+
+/* ========================
+   VIEW MODES
+======================== */
+
+/* GRID */
+.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* LIST */
+.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* DETAILS */
+.details-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ========================
+   FOOTER
+======================== */
+footer {
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  padding: var(--space-xl) 0;
+  margin-top: var(--space-xl);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ========================
+   RESPONSIVE
+======================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
