@@ -1,0 +1,488 @@
+/*
+ * themes.css
+ * Multi-Theme Definitions — Cooking & Recipe Website
+ * Author: Marwan Alaa Sadek 
+ * COM209 – Internet Technology | AY 2025/2026
+ *
+ * Requires: global.css (must be loaded first)
+ * Works with: theme_switcher.js (Mohamed Hesham)
+ *
+ * Usage:
+ *   The <body> element receives one of these classes:
+ *     (no class / default)  → Theme 1: Light Green
+ *     body.theme-dark        → Theme 2: Dark Mode
+ *     body.theme-autumn      → Theme 3: Warm Autumn
+ *
+ *   theme_switcher.js handles toggling the class and saving
+ *   the user's preference to localStorage.
+ */
+
+/* =========================================================
+   SMOOTH THEME TRANSITION — applied globally
+   ========================================================= */
+
+body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* =========================================================
+   THEME 1 — LIGHT GREEN (Default)
+   The root variables here ARE theme 1.
+   global.css should import / reference these.
+   We also define them here to be self-contained.
+   ========================================================= */
+
+:root,
+body.theme-light {
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f9f4;
+  --bg-card: #ffffff;
+  --bg-nav: #ffffff;
+  --bg-footer: #1b3a1f;
+
+  /* Text */
+  --text-primary: #1a2e1c;
+  --text-secondary: #4a6650;
+  --text-muted: #7a9c82;
+  --text-on-accent: #ffffff;
+  --text-footer: #c8e6c9;
+
+  /* Accent */
+  --accent-color: #2e7d32;
+  --accent-hover: #1b5e20;
+  --accent-light: #e8f5e9;
+  --accent-border: #a5d6a7;
+
+  /* UI Components */
+  --border-color: #c8e6c9;
+  --border-radius: 12px;
+  --border-radius-sm: 6px;
+  --border-radius-lg: 20px;
+
+  /* Shadows */
+  --card-shadow: 0 2px 12px rgba(46, 125, 50, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 8px 28px rgba(46, 125, 50, 0.18), 0 3px 8px rgba(0, 0, 0, 0.08);
+  --nav-shadow: 0 2px 8px rgba(46, 125, 50, 0.08);
+
+  /* Inputs */
+  --input-bg: #ffffff;
+  --input-border: #b2dfb4;
+  --input-focus-border: #2e7d32;
+  --input-focus-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  --input-error-border: #e53935;
+  --input-error-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
+
+  /* Badges & Tags */
+  --badge-bg: #e8f5e9;
+  --badge-color: #2e7d32;
+
+  /* Tabs (auth.html) */
+  --tab-active-bg: #2e7d32;
+  --tab-active-color: #ffffff;
+  --tab-inactive-bg: #f4f9f4;
+  --tab-inactive-color: #4a6650;
+
+  /* Strength bar track */
+  --strength-track: #e0e0e0;
+
+  /* Success / Error system messages */
+  --success-bg: #e8f5e9;
+  --success-color: #1b5e20;
+  --success-border: #a5d6a7;
+  --error-bg: #ffebee;
+  --error-color: #b71c1c;
+  --error-border: #ef9a9a;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #a5d6a7;
+  --scrollbar-track: #f4f9f4;
+
+  /* Misc */
+  --overlay-bg: rgba(27, 58, 31, 0.45);
+  --hr-color: #e0ede0;
+}
+
+/* =========================================================
+   THEME 2 — DARK MODE
+   ========================================================= */
+
+body.theme-dark {
+  /* Backgrounds */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-card: #0f3460;
+  --bg-nav: #0d1b2a;
+  --bg-footer: #0d1b2a;
+
+  /* Text */
+  --text-primary: #e8eaf6;
+  --text-secondary: #90caf9;
+  --text-muted: #78909c;
+  --text-on-accent: #ffffff;
+  --text-footer: #b0bec5;
+
+  /* Accent — teal/cyan for dark contrast */
+  --accent-color: #26c6da;
+  --accent-hover: #00b0c8;
+  --accent-light: rgba(38, 198, 218, 0.12);
+  --accent-border: rgba(38, 198, 218, 0.35);
+
+  /* UI Components */
+  --border-color: rgba(255, 255, 255, 0.10);
+  --border-radius: 4px;
+  --border-radius-sm: 2px;
+  --border-radius-lg: 8px;
+
+  /* Shadows — stronger contrast for depth */
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(38, 198, 218, 0.15);
+  --nav-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+
+  /* Inputs */
+  --input-bg: #0d1b2a;
+  --input-border: rgba(255, 255, 255, 0.15);
+  --input-focus-border: #26c6da;
+  --input-focus-shadow: 0 0 0 3px rgba(38, 198, 218, 0.20);
+  --input-error-border: #ef5350;
+  --input-error-shadow: 0 0 0 3px rgba(239, 83, 80, 0.18);
+
+  /* Badges & Tags */
+  --badge-bg: rgba(38, 198, 218, 0.15);
+  --badge-color: #26c6da;
+
+  /* Tabs */
+  --tab-active-bg: #26c6da;
+  --tab-active-color: #0d1b2a;
+  --tab-inactive-bg: #16213e;
+  --tab-inactive-color: #90caf9;
+
+  /* Strength bar */
+  --strength-track: #263238;
+
+  /* System messages */
+  --success-bg: rgba(38, 198, 218, 0.12);
+  --success-color: #80deea;
+  --success-border: rgba(38, 198, 218, 0.30);
+  --error-bg: rgba(239, 83, 80, 0.12);
+  --error-color: #ef9a9a;
+  --error-border: rgba(239, 83, 80, 0.30);
+
+  /* Scrollbar */
+  --scrollbar-thumb: #26c6da;
+  --scrollbar-track: #16213e;
+
+  /* Misc */
+  --overlay-bg: rgba(0, 0, 0, 0.65);
+  --hr-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Dark mode color-scheme so native browser UI adapts */
+body.theme-dark {
+  color-scheme: dark;
+}
+
+/* ── Dark mode image brightness reduction for eye comfort */
+body.theme-dark img {
+  filter: brightness(0.88) contrast(1.05);
+}
+
+/* ── Dark mode selection colour */
+body.theme-dark ::selection {
+  background-color: rgba(38, 198, 218, 0.30);
+  color: #e8eaf6;
+}
+
+/* ── Dark mode scrollbar */
+body.theme-dark ::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+body.theme-dark ::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+/* =========================================================
+   THEME 3 — WARM AUTUMN
+   ========================================================= */
+
+body.theme-autumn {
+  /* Backgrounds */
+  --bg-primary: #fff8f0;
+  --bg-secondary: #fff3e0;
+  --bg-card: #fffaf5;
+  --bg-nav: #fff8f0;
+  --bg-footer: #3e1f00;
+
+  /* Text */
+  --text-primary: #2c1500;
+  --text-secondary: #6d3b00;
+  --text-muted: #a07040;
+  --text-on-accent: #ffffff;
+  --text-footer: #ffcc80;
+
+  /* Accent — burnt orange / deep amber */
+  --accent-color: #e65100;
+  --accent-hover: #bf360c;
+  --accent-light: #fff3e0;
+  --accent-border: #ffcc80;
+
+  /* UI Components */
+  --border-color: #ffe0b2;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 16px;
+
+  /* Shadows — warmer, amber-tinted */
+  --card-shadow: 0 2px 14px rgba(190, 100, 20, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 8px 30px rgba(190, 100, 20, 0.22), 0 3px 8px rgba(0, 0, 0, 0.08);
+  --nav-shadow: 0 2px 8px rgba(190, 100, 20, 0.10);
+
+  /* Inputs */
+  --input-bg: #fffaf5;
+  --input-border: #ffcc80;
+  --input-focus-border: #e65100;
+  --input-focus-shadow: 0 0 0 3px rgba(230, 81, 0, 0.14);
+  --input-error-border: #c62828;
+  --input-error-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+
+  /* Badges & Tags */
+  --badge-bg: #fff3e0;
+  --badge-color: #e65100;
+
+  /* Tabs */
+  --tab-active-bg: #e65100;
+  --tab-active-color: #ffffff;
+  --tab-inactive-bg: #fff3e0;
+  --tab-inactive-color: #6d3b00;
+
+  /* Strength bar */
+  --strength-track: #ffe0b2;
+
+  /* System messages */
+  --success-bg: #f1f8e9;
+  --success-color: #33691e;
+  --success-border: #aed581;
+  --error-bg: #ffebee;
+  --error-color: #b71c1c;
+  --error-border: #ef9a9a;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #ffcc80;
+  --scrollbar-track: #fff3e0;
+
+  /* Misc */
+  --overlay-bg: rgba(62, 31, 0, 0.50);
+  --hr-color: #ffe0b2;
+}
+
+/* ── Autumn warm selection colour */
+body.theme-autumn ::selection {
+  background-color: rgba(230, 81, 0, 0.20);
+  color: #2c1500;
+}
+
+/* ── Autumn scrollbar */
+body.theme-autumn ::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+body.theme-autumn ::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+/* =========================================================
+   SHARED COMPONENT OVERRIDES
+   These rules apply across all themes using the CSS variables.
+   They keep component styling DRY — no need to repeat in
+   each theme block.
+   ========================================================= */
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--accent-color);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background-color: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-3px);
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="file"],
+input[type="url"],
+select,
+textarea {
+  background-color: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: var(--input-focus-shadow);
+  outline: none;
+}
+
+input.input-error,
+select.input-error,
+textarea.input-error {
+  border-color: var(--input-error-border) !important;
+  box-shadow: var(--input-error-shadow) !important;
+}
+
+/* Inline error messages */
+.error-msg {
+  display: none;
+  color: var(--error-color);
+  font-size: 0.78rem;
+  margin-top: 4px;
+  padding: 2px 0;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Badges */
+.badge {
+  background-color: var(--badge-bg);
+  color: var(--badge-color);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Success alert */
+.alert-success {
+  background-color: var(--success-bg);
+  color: var(--success-color);
+  border: 1px solid var(--success-border);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 16px;
+  font-weight: 500;
+}
+
+/* Error alert */
+.alert-error {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  border: 1px solid var(--error-border);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 16px;
+  font-weight: 500;
+}
+
+/* HR divider */
+hr {
+  border: none;
+  border-top: 1px solid var(--hr-color);
+  margin: 1.5rem 0;
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Active nav link */
+.nav-link.active,
+.nav-link:hover {
+  color: var(--accent-color);
+}
+
+/* Tabs (used in auth.html) */
+.tab-btn {
+  background-color: var(--tab-inactive-bg);
+  color: var(--tab-inactive-color);
+  border: 1px solid var(--border-color);
+  padding: 10px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: var(--border-radius-sm);
+}
+
+.tab-btn.active {
+  background-color: var(--tab-active-bg);
+  color: var(--tab-active-color);
+  border-color: var(--tab-active-bg);
+}
+
+/* Password strength bar container */
+.strength-bar-track {
+  width: 100%;
+  height: 6px;
+  background-color: var(--strength-track);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.35s ease, background-color 0.35s ease;
+}
+
+/* Scrollbar (WebKit) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--accent-light);
+  color: var(--text-primary);
+}
