@@ -1,0 +1,298 @@
+/* ==========================================================================
+   STAR RATING
+   ========================================================================== */
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.stars .star {
+  color: #E0E0E0;
+  transition: color var(--transition-fast);
+}
+
+.stars .star.filled {
+  color: #FFC107;
+}
+
+.stars .star.half {
+  position: relative;
+  color: #E0E0E0;
+}
+
+.stars .star.half::after {
+  content: '★';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #FFC107;
+}
+
+/* Interactive star rating (review forms) */
+.stars-input {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 2px;
+}
+
+.stars-input input {
+  display: none;
+}
+
+.stars-input label {
+  font-size: 1.5rem;
+  color: #E0E0E0;
+  cursor: pointer;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.stars-input label:hover,
+.stars-input label:hover ~ label,
+.stars-input input:checked ~ label {
+  color: #FFC107;
+}
+
+.stars-input label:hover {
+  transform: scale(1.15);
+}
+
+.stars-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: var(--space-xs);
+}
+
+
+/* ==========================================================================
+   FORM INPUTS & GROUPS
+   ========================================================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-label .required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* Base input */
+.form-control {
+  width: 100%;
+  padding: 0.6rem var(--space-md);
+  font-size: 0.9rem;
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.form-control:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+/* Validation states — set by validation.js */
+.form-control.valid {
+  border-color: var(--color-success);
+}
+
+.form-control.error {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+/* Error message */
+.form-error {
+  font-size: 0.78rem;
+  color: var(--color-danger);
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-error.visible {
+  display: flex;
+}
+
+/* Hint text */
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Select */
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23555' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-md) center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* Checkbox & Radio */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-check-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* Character Counter */
+.char-counter {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.char-counter.near-limit {
+  color: var(--color-warning);
+}
+
+.char-counter.at-limit {
+  color: var(--color-danger);
+}
+
+/* File Upload */
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.55rem var(--space-md);
+  background-color: var(--bg-secondary);
+  border: 1.5px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast),
+              background-color var(--transition-fast);
+}
+
+.file-upload-label:hover {
+  border-color: var(--color-primary);
+  background-color: #f0faf0;
+  color: var(--color-primary);
+}
+
+.file-upload-label input[type="file"] {
+  display: none;
+}
+
+/* Image Preview */
+.img-preview {
+  width: 100%;
+  max-width: 280px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: none;
+  margin-top: var(--space-sm);
+}
+
+.img-preview.visible {
+  display: block;
+}
+
+/* Password Strength Bar */
+.password-strength {
+  margin-top: var(--space-xs);
+}
+
+.password-strength__bar {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.password-strength__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  width: 0%;
+  transition: width var(--transition-normal), background-color var(--transition-normal);
+}
+
+.password-strength__fill[data-strength="1"] { width: 25%; background-color: var(--color-danger); }
+.password-strength__fill[data-strength="2"] { width: 50%; background-color: var(--color-warning); }
+.password-strength__fill[data-strength="3"] { width: 75%; background-color: #8BC34A; }
+.password-strength__fill[data-strength="4"] { width: 100%; background-color: var(--color-success); }
+
+.password-strength__label {
+  font-size: 0.75rem;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+
+/* Show/Hide password toggle */
+.input-password-wrapper {
+  position: relative;
+}
+
+.input-password-wrapper .form-control {
+  padding-right: 2.8rem;
+}
+
+.btn-show-password {
+  position: absolute;
+  right: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.btn-show-password:hover {
+  color: var(--text-primary);
+}

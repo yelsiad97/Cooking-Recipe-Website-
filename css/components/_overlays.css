@@ -1,0 +1,209 @@
+/* ==========================================================================
+   ALERT BOXES
+   ========================================================================== */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-md);
+  border-radius: var(--radius-md);
+  border-left: 4px solid transparent;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.alert-success {
+  background-color: #E8F5E9;
+  border-left-color: var(--color-success);
+  color: #1B5E20;
+}
+
+.alert-error {
+  background-color: #FFEBEE;
+  border-left-color: var(--color-danger);
+  color: #B71C1C;
+}
+
+.alert-warning {
+  background-color: #FFFDE7;
+  border-left-color: var(--color-warning);
+  color: #F57F17;
+}
+
+.alert-info {
+  background-color: #E3F2FD;
+  border-left-color: #1565C0;
+  color: #0D47A1;
+}
+
+.alert__icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.alert__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.alert__close:hover {
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   MODAL & OVERLAY
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(20px) scale(0.97);
+  transition: transform var(--transition-normal);
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.modal__close:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
+.modal__body {
+  padding: var(--space-lg);
+}
+
+.modal__footer {
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+
+.toast-container {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: #212121;
+  color: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.875rem;
+  min-width: 220px;
+  max-width: 360px;
+  pointer-events: auto;
+  transform: translateX(110%);
+  transition: transform var(--transition-normal);
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast--success { border-left: 3px solid var(--color-success); }
+.toast--error   { border-left: 3px solid var(--color-danger); }
+.toast--warning { border-left: 3px solid var(--color-warning); }
+.toast--info    { border-left: 3px solid #1565C0; }
+
+.toast__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.toast__msg {
+  flex: 1;
+}
+
+.toast__close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.toast__close:hover {
+  color: #fff;
+}

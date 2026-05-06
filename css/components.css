@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Structure:
+     _navbar.css   → Navigation bar & mobile hamburger
+     _cards.css    → Recipe cards, blog cards, mini cards
+     _buttons.css  → Buttons (all variants) & badges
+     _forms.css    → Inputs, star rating, file upload, password strength
+     _overlays.css → Alerts, modals, toast notifications
+     _elements.css → Pagination, spinner, tables, breadcrumb,
+                     tabs, accordion, tooltip, avatar, progress bar
+   ========================================================================== */
+
+@import url('_navbar.css');
+@import url('_cards.css');
+@import url('_buttons.css');
+@import url('_forms.css');
+@import url('_overlays.css');
+@import url('_elements.css');
