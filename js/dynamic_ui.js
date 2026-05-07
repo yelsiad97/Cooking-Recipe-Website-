@@ -239,31 +239,19 @@ function initDynamicIngredients() {
   const container = document.querySelector(".ingredients-container");
   if (!addBtn || !container) return;
 
-  let rowIndex = container.querySelectorAll(".ingredient-row").length;
-
   addBtn.addEventListener("click", () => {
-    rowIndex++;
+    const uniqueStepId = Date.now();
     const row = document.createElement("div");
-    row.className = "ingredient-row";
-    row.style.animation = "fadeSlideIn 0.2s ease";
+    row.className = "step-row flex gap-3 items-start fade-in"; 
     row.innerHTML = `
-      <input type="number" class="form-control" name="qty-${rowIndex}"
-             placeholder="Qty" min="0" step="0.1" style="width:80px;">
-      <select class="form-control" name="unit-${rowIndex}" style="width:110px;">
-        <option value="cups">cups</option>
-        <option value="grams">grams</option>
-        <option value="tbsp">tbsp</option>
-        <option value="tsp">tsp</option>
-        <option value="ml">ml</option>
-        <option value="oz">oz</option>
-        <option value="pcs">pcs</option>
-      </select>
-      <input type="text" class="form-control" name="ingredient-${rowIndex}"
-             placeholder="Ingredient name" style="flex:1;">
-      <button type="button" class="btn btn-danger btn-sm remove-ingredient-btn"
-              aria-label="Remove ingredient">✕</button>
+      <span class="step-number font-bold text-primary mt-2">Step</span>
+      <textarea class="form-control w-full" name="step-${uniqueStepId}" rows="2"
+                placeholder="Describe this step..."></textarea>
+      <button type="button" class="btn btn-danger btn-sm remove-step-btn mt-1"
+              aria-label="Remove step">✕</button>
     `;
     container.appendChild(row);
+    updateStepNumbers();
   });
 
   // Event delegation — handles all remove buttons including future ones
@@ -290,21 +278,24 @@ function initDynamicSteps() {
 
   function updateStepNumbers() {
     container.querySelectorAll(".step-row").forEach((row, i) => {
+      const newStepNum = i + 1;
       const label = row.querySelector(".step-number");
-      if (label) label.textContent = `Step ${i + 1}`;
+      if (label) label.textContent = `Step ${newStepNum}`;
+      
+      const textarea = row.querySelector("textarea");
+      if (textarea) textarea.name = `step-${newStepNum}`;
     });
   }
 
   addBtn.addEventListener("click", () => {
     const stepCount = container.querySelectorAll(".step-row").length + 1;
     const row = document.createElement("div");
-    row.className = "step-row";
-    row.style.animation = "fadeSlideIn 0.2s ease";
+    row.className = "step-row flex gap-3 items-start fade-in"; 
     row.innerHTML = `
-      <span class="step-number font-bold text-primary">Step ${stepCount}</span>
-      <textarea class="form-control" name="step-${stepCount}" rows="2"
+      <span class="step-number font-bold text-primary mt-2">Step ${stepCount}</span>
+      <textarea class="form-control w-full" name="step-${stepCount}" rows="2"
                 placeholder="Describe this step..."></textarea>
-      <button type="button" class="btn btn-danger btn-sm remove-step-btn"
+      <button type="button" class="btn btn-danger btn-sm remove-step-btn mt-1"
               aria-label="Remove step">✕</button>
     `;
     container.appendChild(row);
@@ -463,8 +454,22 @@ function initLiveChat() {
    Add / remove items, update badge count and sidebar in real time.
    ========================================================================== */
 
-const cart = {}; // { productId: { name, price, image, qty } }
+ // Read cart from LocalStorage or initialize an empty cart
+let cart = {};
+try {
+  const storedCart = localStorage.getItem('groceryCart');
+  if (storedCart) {
+    cart = JSON.parse(storedCart);
+  }
+} catch (error) {
+  console.error("Cart data is corrupted. Resetting cart...");
+  cart = {};
+  localStorage.removeItem('groceryCart');
+} 
 
+function saveCart() {
+  localStorage.setItem('groceryCart', JSON.stringify(cart));
+}
 function initGroceryCart() {
   const productGrid = document.querySelector(".product-grid");
   const cartSidebar = document.querySelector(".cart-sidebar");
@@ -500,6 +505,7 @@ function initGroceryCart() {
         cart[id] = { name, price, image, qty: 1 };
       }
 
+      saveCart();
       renderCart(cartList, cartBadge, cartSubtotal, emptyMsg);
     }
   });
@@ -551,28 +557,55 @@ function initGroceryCart() {
 function renderCart(cartList, cartBadge, cartSubtotal, emptyMsg) {
   if (!cartList) return;
 
+  // Save changes to LocalStorage immediately
+  saveCart();
+
   const items = Object.entries(cart);
 
-  // Badge count
+  // Update quantities and the empty cart message
   const totalQty = items.reduce((sum, [, item]) => sum + item.qty, 0);
   if (cartBadge) cartBadge.textContent = totalQty;
-
-  // Empty state
   if (emptyMsg) emptyMsg.classList.toggle("hidden", items.length > 0);
 
-  // Build cart list HTML
-  cartList.innerHTML = items.map(([id, item]) => `
-    <div class="cart-item">
-      <img src="${item.image}" alt="${item.name}" class="cart-item__img">
-      <div class="cart-item__info">
-        <p class="cart-item__name">${item.name}</p>
-        <p class="cart-item__price">${item.qty} × ${item.price.toFixed(2)} EGP</p>
-      </div>
-      <button class="btn btn-danger btn-sm remove-cart-btn" data-product-id="${id}">✕</button>
-    </div>
-  `).join("");
+  // Clear old cart elements
+  cartList.innerHTML = "";
 
-  // Subtotal
+  // Safely build DOM elements (preventing XSS vulnerabilities)
+  items.forEach(([id, item]) => {
+    const itemDiv = document.createElement("div");
+    itemDiv.className = "cart-item flex items-center gap-2 mb-2";
+
+    const img = document.createElement("img");
+    img.src = item.image;
+    img.alt = item.name;
+    img.className = "cart-item__img w-10 h-10 object-cover rounded";
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "cart-item__info flex-1";
+
+    const nameP = document.createElement("p");
+    nameP.className = "cart-item__name font-bold text-sm";
+    // textContent protects against XSS
+    nameP.textContent = item.name; 
+
+    const priceP = document.createElement("p");
+    priceP.className = "cart-item__price text-xs text-muted";
+    priceP.textContent = `${item.qty} × ${item.price.toFixed(2)} EGP`;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn btn-danger btn-sm remove-cart-btn";
+    removeBtn.dataset.productId = id;
+    removeBtn.textContent = "✕";
+
+    infoDiv.appendChild(nameP);
+    infoDiv.appendChild(priceP);
+    itemDiv.appendChild(img);
+    itemDiv.appendChild(infoDiv);
+    itemDiv.appendChild(removeBtn);
+
+    cartList.appendChild(itemDiv);
+  });
+
   const subtotal = items.reduce((sum, [, item]) => sum + item.price * item.qty, 0);
   if (cartSubtotal) cartSubtotal.textContent = `${subtotal.toFixed(2)} EGP`;
 }
@@ -599,7 +632,8 @@ function initMealPlanner() {
   const plannerTable = document.querySelector(".planner-table");
   const clearBtn = document.querySelector(".clear-week-btn");
   const randomBtn = document.querySelector(".random-plan-btn");
-  if (!plannerTable) return;
+
+  if (!plannerTable || !window.CookingApp) return;
 
   // --- Add meal: clicking "+" in an empty cell ---
   plannerTable.addEventListener("click", (e) => {
@@ -642,22 +676,52 @@ function initMealPlanner() {
 }
 
 function fillCell(cell, recipe) {
-  cell.innerHTML = `
-    <div class="card card--mini">
-      <img src="${recipe.img}" alt="${recipe.name}" class="card__img">
-      <div class="card__body">
-        <p class="card__title">${recipe.name}</p>
-        <small class="text-muted">${recipe.cal} kcal</small>
-      </div>
-    </div>
-    <button class="btn btn-danger btn-sm remove-meal-btn" aria-label="Remove meal">✕</button>
-  `;
+  // Empty the cell first
+  cell.innerHTML = "";
+  cell.classList.add("meal-cell");
+  
+  // Safely build the element using textContent
+  const cardDiv = document.createElement("div");
+  cardDiv.className = "card card--mini relative";
+  
+  const img = document.createElement("img");
+  img.src = recipe.img;
+  img.alt = recipe.name;
+  img.className = "card__img";
+  
+  const bodyDiv = document.createElement("div");
+  bodyDiv.className = "card__body";
+  
+  const titleP = document.createElement("p");
+  titleP.className = "card__title font-bold text-sm";
+  // Safe rendering
+  titleP.textContent = recipe.name; 
+  
+  const calSmall = document.createElement("small");
+  calSmall.className = "text-muted text-xs";
+  // Safe rendering
+  calSmall.textContent = `${recipe.cal} kcal`; 
+  
+  const removeBtn = document.createElement("button");
+  removeBtn.className = "btn btn-danger btn-sm remove-meal-btn absolute top-1 right-1";
+  removeBtn.setAttribute("aria-label", "Remove meal");
+  removeBtn.textContent = "✕";
+
+  bodyDiv.appendChild(titleP);
+  bodyDiv.appendChild(calSmall);
+  cardDiv.appendChild(img);
+  cardDiv.appendChild(bodyDiv);
+  
+  cell.appendChild(cardDiv);
+  cell.appendChild(removeBtn);
+  
   cell.dataset.calories = recipe.cal;
 }
 
 function clearCell(cell) {
   cell.innerHTML = `<button class="btn btn-outline btn-sm add-meal-btn" aria-label="Add meal">+</button>`;
   delete cell.dataset.calories;
+  cell.classList.remove("meal-cell");
 }
 
 function updateCalorieSummary(table) {

@@ -24,7 +24,7 @@
 function showError(inputElement, message) {
   if (!inputElement) return;
 
-  inputElement.classList.add("input-error");
+  inputElement.classList.add("error");
   inputElement.setAttribute("aria-invalid", "true");
 
   // Look for a sibling .error-msg element
@@ -50,7 +50,7 @@ function showError(inputElement, message) {
 function clearError(inputElement) {
   if (!inputElement) return;
 
-  inputElement.classList.remove("input-error");
+  inputElement.classList.remove("error");
   inputElement.setAttribute("aria-invalid", "false");
 
   const errorSpan =
@@ -146,10 +146,10 @@ function updateStrengthBar(passwordValue) {
   const score = passwordStrengthMeter(passwordValue);
   const levels = [
     { text: "", width: "0%", color: "transparent" },
-    { text: "Weak", width: "25%", color: "#e53935" },
-    { text: "Fair", width: "50%", color: "#fb8c00" },
-    { text: "Strong", width: "75%", color: "#43a047" },
-    { text: "Very Strong", width: "100%", color: "#1b5e20" },
+    { text: "Weak", width: "25%", color: "var(--color-danger)" },
+    { text: "Fair", width: "50%", color: "var(--color-warning)" },
+    { text: "Strong", width: "75%", color: "var(--color-primary-light)" },
+    { text: "Very Strong", width: "100%", color: "var(--color-success)" },
   ];
 
   const level = levels[score];
@@ -174,7 +174,9 @@ function validateLoginForm() {
   let isValid = true;
 
   // Email
-  if (!emailInput || emailInput.value.trim() === "") {
+  if (!emailInput) {
+    isValid = false;
+  } else if (emailInput.value.trim() === "") {
     showError(emailInput, "Email address is required.");
     isValid = false;
   } else if (!isValidEmail(emailInput.value)) {
@@ -185,7 +187,9 @@ function validateLoginForm() {
   }
 
   // Password
-  if (!passwordInput || passwordInput.value.trim() === "") {
+  if (!passwordInput) {
+    isValid = false;
+  } else if (passwordInput.value.trim() === "") {
     showError(passwordInput, "Password is required.");
     isValid = false;
   } else {
@@ -338,7 +342,9 @@ function validateSubmitRecipeForm() {
 
   // Image upload — required
   const imageInput = document.getElementById("recipe-image");
-  if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
+  if (!imageInput) {
+    isValid = false;
+  } else if (!imageInput.files || imageInput.files.length === 0) {
     showError(imageInput, "A cover image is required.");
     isValid = false;
   } else {
@@ -532,6 +538,26 @@ function attachBlurListeners() {
     }
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      if (!validateLoginForm()) {
+        e.preventDefault(); 
+      }
+    });
+  }
+
+  const registerForm = document.getElementById("register-form");
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      if (!validateRegisterForm()) {
+        e.preventDefault(); 
+      }
+    });
+  }
+});
 
 /* =========================================================
    INIT

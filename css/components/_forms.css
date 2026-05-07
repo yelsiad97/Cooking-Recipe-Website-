@@ -11,17 +11,17 @@
 }
 
 .stars .star {
-  color: #E0E0E0;
+  color: var(--border-color);
   transition: color var(--transition-fast);
 }
 
 .stars .star.filled {
-  color: #FFC107;
+  color: var(--color-warning);
 }
 
 .stars .star.half {
   position: relative;
-  color: #E0E0E0;
+  color: var(--border-color);
 }
 
 .stars .star.half::after {
@@ -31,23 +31,12 @@
   top: 0;
   width: 50%;
   overflow: hidden;
-  color: #FFC107;
-}
-
-/* Interactive star rating (review forms) */
-.stars-input {
-  display: inline-flex;
-  flex-direction: row-reverse;
-  gap: 2px;
-}
-
-.stars-input input {
-  display: none;
+  color: var(--color-warning);
 }
 
 .stars-input label {
   font-size: 1.5rem;
-  color: #E0E0E0;
+  color: var(--border-color);
   cursor: pointer;
   transition: color var(--transition-fast), transform var(--transition-fast);
 }
@@ -55,7 +44,7 @@
 .stars-input label:hover,
 .stars-input label:hover ~ label,
 .stars-input input:checked ~ label {
-  color: #FFC107;
+  color: var(--color-warning);
 }
 
 .stars-input label:hover {
@@ -112,7 +101,7 @@
 
 .form-control:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 /* Validation states — set by validation.js */
@@ -122,7 +111,7 @@
 
 .form-control.error {
   border-color: var(--color-danger);
-  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+  box-shadow: 0 0 0 3px var(--color-danger-light);
 }
 
 /* Error message */
@@ -216,8 +205,8 @@ select.form-control {
 
 .file-upload-label:hover {
   border-color: var(--color-primary);
-  background-color: #f0faf0;
-  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
 }
 
 .file-upload-label input[type="file"] {

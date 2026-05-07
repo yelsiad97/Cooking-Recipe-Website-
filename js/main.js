@@ -39,30 +39,30 @@ function initScrollToTop() {
 
 // Navbar shadow on scroll
 function initNavbarScrollEffect() {
-  const header = document.querySelector("header");
-  if (!header) return;
+  const navbar = document.querySelector(".navbar");
+  if (!navbar) return;
 
   window.addEventListener("scroll", () => {
-    header.classList.toggle("scrolled", window.scrollY > 50);
+    navbar.classList.toggle("scrolled", window.scrollY > 50);
   });
 }
 
 
 // Mobile hamburger menu
 function initMobileMenu() {
-  const hamburger = document.querySelector(".hamburger-btn");
-  const mobileNav = document.querySelector(".nav-links");
+  const hamburger = document.querySelector(".navbar__hamburger");
+  const mobileNav = document.querySelector(".navbar__links");
   if (!hamburger || !mobileNav) return;
 
   hamburger.addEventListener("click", () => {
-    const isOpen = mobileNav.classList.toggle("nav-open");
+    const isOpen = mobileNav.classList.toggle("open");
     hamburger.setAttribute("aria-expanded", isOpen);
     hamburger.classList.toggle("open", isOpen);
   });
 
-  mobileNav.querySelectorAll(".nav-link").forEach((link) => {
+  mobileNav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      mobileNav.classList.remove("nav-open");
+      mobileNav.classList.remove("open");
       hamburger.classList.remove("open");
       hamburger.setAttribute("aria-expanded", false);
     });

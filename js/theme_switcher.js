@@ -97,8 +97,7 @@ function initThemeSwitcher() {
     });
 }
 
-// Call immediately to prevent theme flash
-loadSavedTheme();
+
 
 // Init events on DOM ready
 document.addEventListener('DOMContentLoaded', initThemeSwitcher);
