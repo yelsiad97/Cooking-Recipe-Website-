@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Recipes | CookBook</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+
+  <style>
+    /* ── Page header ────────────────────────────────────── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+      color: var(--text-inverse);
+      padding: var(--space-xl) 0;
+      margin-bottom: var(--space-lg);
+    }
+
+    .page-hero h1 { color: var(--text-inverse); margin-bottom: var(--space-sm); }
+    .page-hero p  { color: rgba(255,255,255,0.85); margin: 0; }
+
+    /* ── Search bar ─────────────────────────────────────── */
+    .search-row {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .search-row .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.65rem var(--space-md);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 0.95rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      outline: none;
+    }
+
+    .search-row .search-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    /* ── Toolbar (view switcher + filter btn) ───────────── */
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .results-count {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .view-switcher {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .view-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+
+    .view-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .view-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--text-inverse);
+    }
+
+    /* ── Sidebar filter panel ───────────────────────────── */
+    .filter-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      height: fit-content;
+      position: sticky;
+      top: 80px;
+    }
+
+    .filter-sidebar h3 {
+      font-size: 0.95rem;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .filter-group { margin-bottom: var(--space-lg); }
+
+    .filter-group h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .filter-group .form-check { margin-bottom: var(--space-xs); }
+
+    .filter-group select.form-control {
+      font-size: 0.875rem;
+      padding: 0.4rem var(--space-sm);
+    }
+
+    /* ── Results container ─────────────────────────────── */
+    .results-container { transition: all var(--transition-normal); }
+
+    /* GRID VIEW — cards grid */
+    .results-container.grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* LIST VIEW — horizontal card rows */
+    .results-container.list-view {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .results-container.list-view .recipe-card {
+      display: flex;
+      flex-direction: row;
+      height: 140px;
+    }
+
+    .results-container.list-view .recipe-card .card__img-wrapper {
+      width: 180px;
+      flex-shrink: 0;
+    }
+
+    .results-container.list-view .recipe-card .card__img {
+      height: 140px;
+      width: 180px;
+    }
+
+    .results-container.list-view .recipe-card .card__body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .results-container.list-view .recipe-card .card__excerpt {
+      -webkit-line-clamp: 1;
+    }
+
+    /* DETAILS VIEW — wide rows with more info */
+    .results-container.details-view {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .results-container.details-view .recipe-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .results-container.details-view .recipe-card .card__img-wrapper {
+      width: 280px;
+    }
+
+    .results-container.details-view .recipe-card .card__img {
+      height: 100%;
+      min-height: 200px;
+      width: 280px;
+    }
+
+    .results-container.details-view .recipe-card .card__body {
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .results-container.details-view .recipe-card .card__excerpt {
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+
+    .details-extra {
+      display: none;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+      margin-top: var(--space-sm);
+    }
+
+    .results-container.details-view .details-extra { display: flex; }
+
+    .details-extra-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .details-extra-item span:first-child {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .details-extra-item span:last-child {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    /* ── No results message ─────────────────────────────── */
+    .no-results {
+      text-align: center;
+      padding: var(--space-xxl) var(--space-lg);
+      color: var(--text-muted);
+    }
+
+    .no-results p { font-size: 1.1rem; margin-bottom: var(--space-sm); }
+
+    /* ── Sort bar ───────────────────────────────────────── */
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .sort-bar label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .sort-bar select {
+      font-size: 0.85rem;
+      padding: 0.3rem var(--space-sm);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── Star display ───────────────────────────────────── */
+    .stars-display { color: var(--color-warning); font-size: 0.85rem; }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .filter-sidebar { position: static; }
+    }
+
+    @media (max-width: 768px) {
+      .results-container.list-view .recipe-card { height: auto; flex-direction: column; }
+      .results-container.list-view .recipe-card .card__img-wrapper { width: 100%; }
+      .results-container.list-view .recipe-card .card__img { width: 100%; height: 180px; }
+      .results-container.details-view .recipe-card { grid-template-columns: 1fr; }
+      .results-container.details-view .recipe-card .card__img-wrapper,
+      .results-container.details-view .recipe-card .card__img { width: 100%; min-height: 200px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">🍳 CookBook</a>
+
+      <ul class="navbar__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="recipes.html" class="active">Recipes</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="planner.html">Meal Planner</a></li>
+        <li><a href="grocery.html">Grocery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+
+      <div class="navbar__actions">
+        <button id="themeToggle" class="btn btn-outline btn-sm">🌙 Theme</button>
+        <a href="auth.html" class="btn btn-primary btn-sm">Login</a>
+      </div>
+
+      <button class="navbar__hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE HERO
+  ══════════════════════════════════════════════════════ -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Browse Recipes</h1>
+      <p>Discover over 1,000 delicious recipes from cuisines around the world.</p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════════════ -->
+  <main style="padding-bottom: var(--space-xxl);">
+    <div class="container">
+
+      <!-- Search Row -->
+      <div class="search-row">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="🔍  Search recipes by name or cuisine..."
+          aria-label="Search recipes"
+        />
+        <button class="btn btn-primary filter-toggle-btn" aria-expanded="false">
+          ⚙️ Filters
+        </button>
+        <a href="submit-recipe.html" class="btn btn-outline">+ Submit Recipe</a>
+      </div>
+
+      <!-- Page layout: sidebar + results -->
+      <div class="page-layout">
+
+        <!-- ── FILTER SIDEBAR ──────────────────────────── -->
+        <aside class="filter-sidebar filter-panel">
+          <h3>🔧 Filter Recipes</h3>
+
+          <!-- Cuisine -->
+          <div class="filter-group">
+            <h4>Cuisine</h4>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="egyptian" /> Egyptian
+            </label>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="italian" /> Italian
+            </label>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="american" /> American
+            </label>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="asian" /> Asian
+            </label>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="mediterranean" /> Mediterranean
+            </label>
+            <label class="form-check">
+              <input type="checkbox" class="filter-cuisine" value="mexican" /> Mexican
+            </label>
+          </div>
+
+          <!-- Difficulty -->
+          <div class="filter-group">
+            <h4>Difficulty</h4>
+            <label class="form-check">
+              <input type="radio" name="difficulty" value="all" checked /> All
+            </label>
+            <label class="form-check">
+              <input type="radio" name="difficulty" value="easy" /> Easy
+            </label>
+            <label class="form-check">
+              <input type="radio" name="difficulty" value="medium" /> Medium
+            </label>
+            <label class="form-check">
+              <input type="radio" name="difficulty" value="hard" /> Hard
+            </label>
+          </div>
+
+          <!-- Cook Time -->
+          <div class="filter-group">
+            <h4>Cook Time</h4>
+            <select class="form-control">
+              <option value="">Any time</option>
+              <option>Under 15 min</option>
+              <option>15 – 30 min</option>
+              <option>30 – 60 min</option>
+              <option>Over 1 hour</option>
+            </select>
+          </div>
+
+          <!-- Dietary -->
+          <div class="filter-group">
+            <h4>Dietary</h4>
+            <label class="form-check">
+              <input type="checkbox" /> Vegetarian
+            </label>
+            <label class="form-check">
+              <input type="checkbox" /> Vegan
+            </label>
+            <label class="form-check">
+              <input type="checkbox" /> Gluten-Free
+            </label>
+            <label class="form-check">
+              <input type="checkbox" /> Dairy-Free
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-block">Apply Filters</button>
+          <button class="btn btn-ghost btn-block mt-2" style="margin-top:var(--space-xs);">
+            Clear All
+          </button>
+        </aside>
+
+
+        <!-- ── RESULTS AREA ────────────────────────────── -->
+        <div>
+
+          <!-- Toolbar -->
+          <div class="results-toolbar">
+            <div class="flex items-center gap-3" style="flex-wrap:wrap;">
+              <p class="results-count">Showing <strong>12</strong> of <strong>1,284</strong> recipes</p>
+              <div class="sort-bar">
+                <label for="sortSelect">Sort:</label>
+                <select id="sortSelect">
+                  <option>Most Popular</option>
+                  <option>Newest First</option>
+                  <option>Cook Time ↑</option>
+                  <option>Rating ↓</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- View mode switcher — data-view used by dynamic_ui.js switchView() -->
+            <div class="view-switcher">
+              <button class="view-btn" data-view="grid"    title="Grid View"    aria-label="Grid view">⊞</button>
+              <button class="view-btn" data-view="list"    title="List View"    aria-label="List view">☰</button>
+              <button class="view-btn" data-view="details" title="Details View" aria-label="Details view">▤</button>
+            </div>
+          </div>
+
+          <!-- ══════════════════════════════════════════════
+               RESULTS CONTAINER
+               Class is toggled by dynamic_ui.js switchView()
+               between: grid-view | list-view | details-view
+          ══════════════════════════════════════════════ -->
+          <div class="results-container grid-view">
+
+            <!-- RECIPE CARD 1 -->
+            <article class="card recipe-card" data-cuisine="italian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-pasta.jpg"
+                  src="assets/images/recipe-pasta.jpg"
+                  alt="Creamy Garlic Pasta"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-orange">Italian</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Creamy Garlic Pasta</h3>
+                <p class="card__excerpt">A rich and creamy garlic pasta made with simple pantry ingredients. Ready in under 30 minutes.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>25 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>4</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>480 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>chef_sara</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 25 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.9
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 2 -->
+            <article class="card recipe-card" data-cuisine="egyptian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-koshari.jpg"
+                  src="assets/images/recipe-koshari.jpg"
+                  alt="Classic Koshari"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-green">Egyptian</span>
+                  <span class="badge badge-yellow">Medium</span>
+                </div>
+                <h3 class="card__title">Classic Koshari</h3>
+                <p class="card__excerpt">Egypt's national dish — a hearty mix of rice, lentils, pasta, and spicy tomato sauce. Comfort food at its best.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>45 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>6</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>420 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>mama_nour</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 45 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.8
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 3 -->
+            <article class="card recipe-card" data-cuisine="american">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-burger.jpg"
+                  src="assets/images/recipe-burger.jpg"
+                  alt="Smash Burger"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-blue">American</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Smash Burger</h3>
+                <p class="card__excerpt">Crispy-edged, juicy smash burgers made at home in under 20 minutes. Better than any fast food.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>20 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>2</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>680 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>chef_omar</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 20 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★☆</span> 4.6
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 4 -->
+            <article class="card recipe-card" data-cuisine="mediterranean">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-salad.jpg"
+                  src="assets/images/recipe-salad.jpg"
+                  alt="Greek Salad"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-orange">Mediterranean</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Classic Greek Salad</h3>
+                <p class="card__excerpt">Fresh tomatoes, cucumbers, olives, and feta cheese drizzled with extra virgin olive oil. Light and refreshing.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>15 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>4</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>210 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>salad_lover</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 15 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.7
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 5 -->
+            <article class="card recipe-card" data-cuisine="egyptian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-soup.jpg"
+                  src="assets/images/recipe-soup.jpg"
+                  alt="Lentil Soup"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-green">Egyptian</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Egyptian Lentil Soup</h3>
+                <p class="card__excerpt">A warm, velvety lentil soup spiced with cumin and served with a squeeze of fresh lemon. Perfect for cold days.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>35 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>4</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>290 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>home_chef_99</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 35 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★☆</span> 4.5
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 6 -->
+            <article class="card recipe-card" data-cuisine="asian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-steak.jpg"
+                  src="assets/images/recipe-steak.jpg"
+                  alt="Teriyaki Chicken"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-blue">Asian</span>
+                  <span class="badge badge-yellow">Medium</span>
+                </div>
+                <h3 class="card__title">Teriyaki Chicken Bowl</h3>
+                <p class="card__excerpt">Tender chicken glazed with homemade teriyaki sauce, served over steamed rice with sesame seeds and spring onions.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>30 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>2</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>520 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>asian_bites</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 30 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.8
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 7 -->
+            <article class="card recipe-card" data-cuisine="american">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-pancakes.jpg"
+                  src="assets/images/recipe-pancakes.jpg"
+                  alt="Fluffy Pancakes"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-blue">American</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Fluffy Buttermilk Pancakes</h3>
+                <p class="card__excerpt">Light, airy pancakes made with buttermilk for extra fluffiness. A perfect weekend breakfast for the whole family.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>20 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>4</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>390 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>brunch_queen</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 20 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★☆</span> 4.4
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 8 -->
+            <article class="card recipe-card" data-cuisine="italian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-pizza.jpg"
+                  src="assets/images/recipe-pizza.jpg"
+                  alt="Margherita Pizza"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-orange">Italian</span>
+                  <span class="badge badge-yellow">Medium</span>
+                </div>
+                <h3 class="card__title">Margherita Pizza</h3>
+                <p class="card__excerpt">Classic Neapolitan pizza with San Marzano tomato sauce, fresh mozzarella, and basil leaves. Simple perfection.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>40 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>2</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>620 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>pizza_maestro</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 40 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.9
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 9 -->
+            <article class="card recipe-card" data-cuisine="mexican">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-pasta.jpg"
+                  src="assets/images/recipe-pasta.jpg"
+                  alt="Chicken Tacos"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-red">Mexican</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Crispy Chicken Tacos</h3>
+                <p class="card__excerpt">Seasoned crispy chicken in warm corn tortillas topped with fresh pico de gallo, avocado cream, and lime.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>25 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>3</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>450 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>taco_tuesday</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 25 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★☆</span> 4.5
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 10 -->
+            <article class="card recipe-card" data-cuisine="egyptian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-koshari.jpg"
+                  src="assets/images/recipe-koshari.jpg"
+                  alt="Ful Medames"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-green">Egyptian</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Ful Medames</h3>
+                <p class="card__excerpt">Egypt's beloved fava bean breakfast, slow-cooked and seasoned with garlic, lemon, cumin and olive oil. Served with fresh bread.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>20 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>4</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>310 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>cairo_kitchen</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 20 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.7
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 11 -->
+            <article class="card recipe-card" data-cuisine="asian">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-steak.jpg"
+                  src="assets/images/recipe-steak.jpg"
+                  alt="Pad Thai"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-blue">Asian</span>
+                  <span class="badge badge-yellow">Medium</span>
+                </div>
+                <h3 class="card__title">Authentic Pad Thai</h3>
+                <p class="card__excerpt">Stir-fried rice noodles with shrimp, tofu, eggs, bean sprouts, and roasted peanuts in a tangy tamarind sauce.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>30 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>2</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>560 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>thai_chef</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 30 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.8
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+            <!-- RECIPE CARD 12 -->
+            <article class="card recipe-card" data-cuisine="mediterranean">
+              <div class="card__img-wrapper">
+                <img
+                  data-src="assets/images/recipe-salad.jpg"
+                  src="assets/images/recipe-salad.jpg"
+                  alt="Hummus"
+                  class="card__img lazy"
+                />
+              </div>
+              <div class="card__body">
+                <div class="card__meta">
+                  <span class="badge badge-orange">Mediterranean</span>
+                  <span class="badge badge-green">Easy</span>
+                </div>
+                <h3 class="card__title">Creamy Homemade Hummus</h3>
+                <p class="card__excerpt">Ultra-smooth hummus made from scratch with chickpeas, tahini, lemon, and garlic. Topped with olive oil and paprika.</p>
+                <div class="details-extra">
+                  <div class="details-extra-item"><span>Cook Time</span><span>10 min</span></div>
+                  <div class="details-extra-item"><span>Servings</span><span>6</span></div>
+                  <div class="details-extra-item"><span>Calories</span><span>180 kcal</span></div>
+                  <div class="details-extra-item"><span>Submitted by</span><span>mezze_master</span></div>
+                </div>
+              </div>
+              <div class="card__footer">
+                <div class="card__info">
+                  <span>⏱</span> 10 min
+                  &nbsp;|&nbsp;
+                  <span class="stars-display">★★★★★</span> 4.9
+                </div>
+                <a href="recipe-details.html" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </article>
+
+          </div><!-- /.results-container -->
+
+          <!-- No results message — shown by dynamic_ui.js when search yields nothing -->
+          <div class="no-results hidden">
+            <p>😕 No recipes found</p>
+            <p style="font-size:.9rem;">Try different keywords or clear your filters.</p>
+            <button class="btn btn-outline mt-3" onclick="document.querySelector('.search-input').value=''; document.querySelector('.search-input').dispatchEvent(new Event('input'));">
+              Clear Search
+            </button>
+          </div>
+
+          <!-- Pagination -->
+          <nav class="pagination" aria-label="Recipe pages">
+            <button class="pagination__btn" disabled>‹</button>
+            <button class="pagination__btn active">1</button>
+            <button class="pagination__btn">2</button>
+            <button class="pagination__btn">3</button>
+            <span class="pagination__dots">…</span>
+            <button class="pagination__btn">107</button>
+            <button class="pagination__btn">›</button>
+          </nav>
+
+        </div><!-- /.results area -->
+      </div><!-- /.page-layout -->
+    </div><!-- /.container -->
+  </main>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">🍳 CookBook</h4>
+          <p style="color:#aaa;font-size:.85rem;">Your go-to place for delicious recipes from around the world.</p>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Quick Links</h5>
+          <ul style="display:flex;flex-direction:column;gap:6px;">
+            <li><a href="index.html"   style="color:#aaa;font-size:.85rem;">Home</a></li>
+            <li><a href="recipes.html" style="color:#aaa;font-size:.85rem;">Recipes</a></li>
+            <li><a href="blog.html"    style="color:#aaa;font-size:.85rem;">Blog</a></li>
+            <li><a href="contact.html" style="color:#aaa;font-size:.85rem;">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Tools</h5>
+          <ul style="display:flex;flex-direction:column;gap:6px;">
+            <li><a href="planner.html"           style="color:#aaa;font-size:.85rem;">Meal Planner</a></li>
+            <li><a href="calculator.html"        style="color:#aaa;font-size:.85rem;">Calculator</a></li>
+            <li><a href="compare-nutrition.html" style="color:#aaa;font-size:.85rem;">Compare Dishes</a></li>
+            <li><a href="grocery.html"           style="color:#aaa;font-size:.85rem;">Grocery Store</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Follow Us</h5>
+          <div class="flex gap-2">
+            <a href="#" aria-label="Facebook"  style="color:#aaa;font-size:1.3rem;">📘</a>
+            <a href="#" aria-label="Instagram" style="color:#aaa;font-size:1.3rem;">📸</a>
+            <a href="#" aria-label="YouTube"   style="color:#aaa;font-size:1.3rem;">▶️</a>
+            <a href="#" aria-label="TikTok"    style="color:#aaa;font-size:1.3rem;">🎵</a>
+          </div>
+        </div>
+      </div>
+      <p style="color:#666;font-size:.8rem;text-align:center;margin-top:var(--space-xl);">
+        &copy; 2025 CookBook &mdash; All rights reserved. | COM209 &ndash; Internet Technology
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════════════════ -->
+  <script src="js/main.js"></script>
+  <script src="js/dynamic_ui.js"></script>
+  <script src="js/theme_switcher.js"></script>
+
+  <script>
+    // Theme toggle button
+    document.getElementById("themeToggle")?.addEventListener("click", () => {
+      if (window.ThemeSwitcher) window.ThemeSwitcher.cycleTheme();
+    });
+
+    // Filter checkboxes — filter cards by cuisine on change
+    document.querySelectorAll(".filter-cuisine").forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        const checked = [...document.querySelectorAll(".filter-cuisine:checked")].map(c => c.value);
+        document.querySelectorAll(".recipe-card").forEach(card => {
+          const match = checked.length === 0 || checked.includes(card.dataset.cuisine);
+          card.classList.toggle("hidden", !match);
+        });
+
+        // Update count
+        const visible = document.querySelectorAll(".recipe-card:not(.hidden)").length;
+        document.querySelector(".results-count").innerHTML =
+          `Showing <strong>${visible}</strong> of <strong>1,284</strong> recipes`;
+      });
+    });
+  </script>
+
+</body>
+</html>

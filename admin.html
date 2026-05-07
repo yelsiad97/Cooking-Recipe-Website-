@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | CookBook</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+
+  <style>
+    /* ── Admin-specific layout ───────────────────────────── */
+    .admin-wrapper {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .admin-sidebar {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      padding: var(--space-lg) 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+
+    .admin-sidebar__logo {
+      padding: 0 var(--space-lg) var(--space-lg);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: var(--space-md);
+    }
+
+    .admin-nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .admin-nav-link:hover {
+      color: var(--color-primary);
+      background: var(--bg-primary);
+      text-decoration: none;
+    }
+
+    .admin-nav-link.active {
+      color: var(--color-primary);
+      background: var(--bg-primary);
+      border-left-color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .admin-nav-link .nav-icon { font-size: 1.1rem; }
+
+    .sidebar-section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: var(--space-md) var(--space-lg) var(--space-xs);
+    }
+
+    /* ── Main content ────────────────────────────────────── */
+    .admin-main {
+      padding: var(--space-lg);
+      background: var(--bg-primary);
+      overflow-y: auto;
+    }
+
+    /* ── Panels ──────────────────────────────────────────── */
+    .admin-panel { display: none; }
+    .admin-panel.active-panel { display: block; }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .panel-header h2 { margin: 0; }
+
+    /* ── Stat cards ──────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .stat-card__icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .stat-card__icon--green  { background: #E8F5E9; }
+    .stat-card__icon--blue   { background: #E3F2FD; }
+    .stat-card__icon--orange { background: #FFF3E0; }
+    .stat-card__icon--red    { background: #FFEBEE; }
+
+    .stat-card__value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-card__label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    /* ── Table wrapper ───────────────────────────────────── */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-xl);
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border-color);
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .table-toolbar h3 { margin: 0; font-size: 1rem; }
+
+    .table-search {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex: 1;
+      max-width: 300px;
+    }
+
+    .table-search input {
+      width: 100%;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .table-search input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    /* ── Styled table ────────────────────────────────────── */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .admin-table thead th {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .admin-table tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background var(--transition-fast);
+    }
+
+    .admin-table tbody tr:last-child { border-bottom: none; }
+
+    .admin-table tbody tr:hover { background: var(--bg-secondary); }
+
+    .admin-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+    .admin-table tbody tr:nth-child(even):hover { background: var(--bg-secondary); }
+
+    .admin-table td {
+      padding: var(--space-sm) var(--space-md);
+      vertical-align: middle;
+      color: var(--text-primary);
+    }
+
+    /* ── Nested: recipe thumbnail in cell ────────────────── */
+    .cell-recipe {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .cell-recipe__img {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border-color);
+    }
+
+    .cell-recipe__title {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .cell-recipe__meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Nested: user avatar in cell ─────────────────────── */
+    .cell-user {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .cell-user__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .cell-user__name  { font-weight: 600; font-size: 0.875rem; }
+    .cell-user__email { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── Nested: action buttons in cell ──────────────────── */
+    .cell-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    /* ── Status badges ───────────────────────────────────── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .status-badge--pending  { background: #FFF8E1; color: #F57F17; }
+    .status-badge--approved { background: #E8F5E9; color: #2E7D32; }
+    .status-badge--rejected { background: #FFEBEE; color: #C62828; }
+    .status-badge--admin    { background: #E3F2FD; color: #1565C0; }
+    .status-badge--user     { background: #F3E5F5; color: #6A1B9A; }
+    .status-badge--banned   { background: #FFEBEE; color: #C62828; }
+
+    /* ── Inline action buttons ───────────────────────────── */
+    .btn-approve {
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid #A5D6A7;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition-fast);
+    }
+    .btn-approve:hover { background: #C8E6C9; }
+
+    .btn-reject {
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      background: #FFEBEE;
+      color: #C62828;
+      border: 1px solid #FFCDD2;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition-fast);
+    }
+    .btn-reject:hover { background: #FFCDD2; }
+
+    .btn-edit {
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      background: #E3F2FD;
+      color: #1565C0;
+      border: 1px solid #90CAF9;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition-fast);
+    }
+    .btn-edit:hover { background: #BBDEFB; }
+
+    .btn-ban {
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      background: #FFF3E0;
+      color: #E65100;
+      border: 1px solid #FFCC80;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition-fast);
+    }
+    .btn-ban:hover { background: #FFE0B2; }
+
+    /* ── Pagination ──────────────────────────────────────── */
+    .table-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-lg);
+      border-top: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pagination-btns {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .pagination-btns button {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .pagination-btns button:hover,
+    .pagination-btns button.active {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .admin-wrapper { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       HEADER / NAVBAR
+  ══════════════════════════════════════════════════════ -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">🍳 CookBook</a>
+
+        <ul class="nav-links">
+          <li><a href="index.html"     class="nav-link">Home</a></li>
+          <li><a href="recipes.html"   class="nav-link">Recipes</a></li>
+          <li><a href="blog.html"      class="nav-link">Blog</a></li>
+          <li><a href="contact.html"   class="nav-link">Contact</a></li>
+          <li><a href="admin.html"     class="nav-link active">Admin</a></li>
+        </ul>
+
+        <div class="flex items-center gap-2">
+          <button id="themeToggle" class="btn btn-outline btn-sm">🌙 Theme</button>
+          <a href="auth.html" class="btn btn-primary btn-sm">Login</a>
+        </div>
+
+        <button class="hamburger-btn navbar__hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       ADMIN WRAPPER
+  ══════════════════════════════════════════════════════ -->
+  <div class="admin-wrapper">
+
+    <!-- ── Sidebar ──────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__logo">⚙️ Admin Panel</div>
+
+      <p class="sidebar-section-label">Overview</p>
+      <a class="admin-nav-link" data-panel="panel-dashboard" href="#">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+
+      <p class="sidebar-section-label">Content</p>
+      <a class="admin-nav-link" data-panel="panel-recipes" href="#">
+        <span class="nav-icon">🍽️</span> Recipes
+      </a>
+      <a class="admin-nav-link" data-panel="panel-users" href="#">
+        <span class="nav-icon">👥</span> Users
+      </a>
+      <a class="admin-nav-link" data-panel="panel-reviews" href="#">
+        <span class="nav-icon">⭐</span> Reviews
+      </a>
+
+      <p class="sidebar-section-label">Settings</p>
+      <a class="admin-nav-link" href="index.html">
+        <span class="nav-icon">🏠</span> Back to Site
+      </a>
+    </aside>
+
+
+    <!-- ── Main ─────────────────────────────────────────── -->
+    <main class="admin-main">
+
+      <!-- ════════════════════════════════════
+           PANEL 1 — DASHBOARD
+      ════════════════════════════════════ -->
+      <section id="panel-dashboard" class="admin-panel">
+        <div class="panel-header">
+          <h2>Dashboard</h2>
+          <span style="color:var(--text-muted);font-size:.85rem;">Welcome back, Admin 👋</span>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--green">🍽️</div>
+            <div>
+              <div class="stat-card__value">1,284</div>
+              <div class="stat-card__label">Total Recipes</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--blue">👥</div>
+            <div>
+              <div class="stat-card__value">8,540</div>
+              <div class="stat-card__label">Registered Users</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--orange">⏳</div>
+            <div>
+              <div class="stat-card__value">23</div>
+              <div class="stat-card__label">Pending Approvals</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--red">⭐</div>
+            <div>
+              <div class="stat-card__value">42,190</div>
+              <div class="stat-card__label">Total Reviews</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick links to other panels -->
+        <div class="flex gap-3" style="flex-wrap:wrap;">
+          <button class="btn btn-primary admin-nav-link" data-panel="panel-recipes">
+            🍽️ Manage Recipes
+          </button>
+          <button class="btn btn-outline admin-nav-link" data-panel="panel-users">
+            👥 Manage Users
+          </button>
+          <button class="btn btn-outline admin-nav-link" data-panel="panel-reviews">
+            ⭐ Manage Reviews
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ════════════════════════════════════
+           PANEL 2 — RECIPES
+      ════════════════════════════════════ -->
+      <section id="panel-recipes" class="admin-panel">
+        <div class="panel-header">
+          <h2>Recipe Management</h2>
+          <a href="submit-recipe.html" class="btn btn-primary btn-sm">+ Add Recipe</a>
+        </div>
+
+        <!-- ADVANCED TABLE: Pending Recipes -->
+        <div class="table-wrapper">
+          <div class="table-toolbar">
+            <h3>⏳ Pending Approvals</h3>
+            <div class="table-search">
+              <!-- data-table links this input to the table below via initAdminTableSearch() -->
+              <input
+                type="text"
+                class="table-search-input"
+                data-table="table-pending"
+                placeholder="Search recipes..."
+                aria-label="Search pending recipes"
+              />
+            </div>
+          </div>
+
+          <!--
+            ADVANCED TABLE REQUIREMENTS MET:
+            • thead with styled header row
+            • Nested <img> thumbnail inside <td>
+            • Nested <a> link inside <td>
+            • Nested action buttons inside <td>
+            • Status badge (<span>) nested inside <td>
+            • Alternating row colors via CSS
+            • Hover highlight via CSS
+          -->
+          <table class="admin-table" id="table-pending">
+            <thead>
+              <tr>
+                <th>Recipe</th>
+                <th>Cuisine</th>
+                <th>Submitted By</th>
+                <th>Date</th>
+                <th>Status</th>
+                <!-- Nested elements column -->
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <!-- NESTED: img + link inside one cell -->
+                  <div class="cell-recipe">
+                    <img
+                      src="assets/images/recipe-pasta.jpg"
+                      alt="Creamy Pasta"
+                      class="cell-recipe__img lazy"
+                      data-src="assets/images/recipe-pasta.jpg"
+                    />
+                    <div>
+                      <a href="recipe-details.html" class="cell-recipe__title">Creamy Garlic Pasta</a>
+                      <p class="cell-recipe__meta">Italian &bull; 30 min &bull; Easy</p>
+                    </div>
+                  </div>
+                </td>
+                <td>Italian</td>
+                <td>ahmed_cook</td>
+                <td>Apr 28, 2025</td>
+                <td>
+                  <!-- NESTED: styled badge span -->
+                  <span class="status-badge status-badge--pending">Pending</span>
+                </td>
+                <td>
+                  <!-- NESTED: multiple action buttons -->
+                  <div class="cell-actions">
+                    <button class="btn-approve" onclick="this.closest('tr').querySelector('.status-badge').className='status-badge status-badge--approved'; this.closest('tr').querySelector('.status-badge').textContent='Approved'; this.parentElement.innerHTML='<span style=\'color:var(--color-success)\'>✓ Approved</span>'">
+                      ✓ Approve
+                    </button>
+                    <button class="btn-reject" onclick="this.closest('tr').querySelector('.status-badge').className='status-badge status-badge--rejected'; this.closest('tr').querySelector('.status-badge').textContent='Rejected'; this.parentElement.innerHTML='<span style=\'color:var(--color-danger)\'>✕ Rejected</span>'">
+                      ✕ Reject
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-recipe">
+                    <img
+                      src="assets/images/recipe-koshari.jpg"
+                      alt="Koshari"
+                      class="cell-recipe__img lazy"
+                      data-src="assets/images/recipe-koshari.jpg"
+                    />
+                    <div>
+                      <a href="recipe-details.html" class="cell-recipe__title">Classic Koshari</a>
+                      <p class="cell-recipe__meta">Egyptian &bull; 45 min &bull; Medium</p>
+                    </div>
+                  </div>
+                </td>
+                <td>Egyptian</td>
+                <td>mama_nour</td>
+                <td>Apr 27, 2025</td>
+                <td><span class="status-badge status-badge--pending">Pending</span></td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Approve</button>
+                    <button class="btn-reject">✕ Reject</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-recipe">
+                    <img
+                      src="assets/images/recipe-burger.jpg"
+                      alt="Smash Burger"
+                      class="cell-recipe__img lazy"
+                      data-src="assets/images/recipe-burger.jpg"
+                    />
+                    <div>
+                      <a href="recipe-details.html" class="cell-recipe__title">Smash Burger</a>
+                      <p class="cell-recipe__meta">American &bull; 20 min &bull; Easy</p>
+                    </div>
+                  </div>
+                </td>
+                <td>American</td>
+                <td>chef_omar</td>
+                <td>Apr 26, 2025</td>
+                <td><span class="status-badge status-badge--approved">Approved</span></td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-edit">✏️ Edit</button>
+                    <button class="btn-reject">🗑 Delete</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-recipe">
+                    <img
+                      src="assets/images/recipe-salad.jpg"
+                      alt="Greek Salad"
+                      class="cell-recipe__img lazy"
+                      data-src="assets/images/recipe-salad.jpg"
+                    />
+                    <div>
+                      <a href="recipe-details.html" class="cell-recipe__title">Greek Salad</a>
+                      <p class="cell-recipe__meta">Mediterranean &bull; 15 min &bull; Easy</p>
+                    </div>
+                  </div>
+                </td>
+                <td>Mediterranean</td>
+                <td>salad_lover</td>
+                <td>Apr 25, 2025</td>
+                <td><span class="status-badge status-badge--rejected">Rejected</span></td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Re-approve</button>
+                    <button class="btn-reject">🗑 Delete</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-recipe">
+                    <img
+                      src="assets/images/recipe-soup.jpg"
+                      alt="Lentil Soup"
+                      class="cell-recipe__img lazy"
+                      data-src="assets/images/recipe-soup.jpg"
+                    />
+                    <div>
+                      <a href="recipe-details.html" class="cell-recipe__title">Egyptian Lentil Soup</a>
+                      <p class="cell-recipe__meta">Egyptian &bull; 35 min &bull; Easy</p>
+                    </div>
+                  </div>
+                </td>
+                <td>Egyptian</td>
+                <td>home_chef_99</td>
+                <td>Apr 24, 2025</td>
+                <td><span class="status-badge status-badge--pending">Pending</span></td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Approve</button>
+                    <button class="btn-reject">✕ Reject</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="table-pagination">
+            <span>Showing 5 of 23 pending recipes</span>
+            <div class="pagination-btns">
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div><!-- /.table-wrapper -->
+      </section>
+
+
+      <!-- ════════════════════════════════════
+           PANEL 3 — USERS
+      ════════════════════════════════════ -->
+      <section id="panel-users" class="admin-panel">
+        <div class="panel-header">
+          <h2>User Management</h2>
+          <span style="color:var(--text-muted);font-size:.85rem;">8,540 registered users</span>
+        </div>
+
+        <div class="table-wrapper">
+          <div class="table-toolbar">
+            <h3>👥 All Users</h3>
+            <div class="table-search">
+              <input
+                type="text"
+                class="table-search-input"
+                data-table="table-users"
+                placeholder="Search users..."
+                aria-label="Search users"
+              />
+            </div>
+          </div>
+
+          <!--
+            ADVANCED TABLE REQUIREMENTS MET:
+            • Nested avatar image inside <td>
+            • Nested role badge (span) inside <td>
+            • Nested action buttons inside <td>
+          -->
+          <table class="admin-table" id="table-users">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Recipes</th>
+                <th>Joined</th>
+                <!-- Nested elements column -->
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <!-- NESTED: avatar image + name/email stacked -->
+                  <div class="cell-user">
+                    <img
+                      src="assets/images/avatar-1.jpg"
+                      alt="Ahmed Ali"
+                      class="cell-user__avatar lazy"
+                      data-src="assets/images/avatar-1.jpg"
+                    />
+                    <div>
+                      <p class="cell-user__name">Ahmed Ali</p>
+                      <p class="cell-user__email">ahmed.ali@email.com</p>
+                    </div>
+                  </div>
+                </td>
+                <td>ahmed.ali@email.com</td>
+                <td>
+                  <!-- NESTED: role badge -->
+                  <span class="status-badge status-badge--admin">Admin</span>
+                </td>
+                <td>47</td>
+                <td>Jan 12, 2024</td>
+                <td>
+                  <!-- NESTED: action buttons -->
+                  <div class="cell-actions">
+                    <button class="btn-edit">✏️ Edit</button>
+                    <button class="btn-ban">🚫 Ban</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img
+                      src="assets/images/avatar-2.jpg"
+                      alt="Sara Hassan"
+                      class="cell-user__avatar lazy"
+                      data-src="assets/images/avatar-2.jpg"
+                    />
+                    <div>
+                      <p class="cell-user__name">Sara Hassan</p>
+                      <p class="cell-user__email">sara.h@email.com</p>
+                    </div>
+                  </div>
+                </td>
+                <td>sara.h@email.com</td>
+                <td><span class="status-badge status-badge--user">User</span></td>
+                <td>12</td>
+                <td>Mar 5, 2024</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-edit">✏️ Edit</button>
+                    <button class="btn-ban">🚫 Ban</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img
+                      src="assets/images/avatar-3.jpg"
+                      alt="Omar Khaled"
+                      class="cell-user__avatar lazy"
+                      data-src="assets/images/avatar-3.jpg"
+                    />
+                    <div>
+                      <p class="cell-user__name">Omar Khaled</p>
+                      <p class="cell-user__email">omar.k@email.com</p>
+                    </div>
+                  </div>
+                </td>
+                <td>omar.k@email.com</td>
+                <td><span class="status-badge status-badge--user">User</span></td>
+                <td>3</td>
+                <td>Jun 19, 2024</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-edit">✏️ Edit</button>
+                    <button class="btn-ban">🚫 Ban</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img
+                      src="assets/images/avatar-4.jpg"
+                      alt="Nour Ibrahim"
+                      class="cell-user__avatar lazy"
+                      data-src="assets/images/avatar-4.jpg"
+                    />
+                    <div>
+                      <p class="cell-user__name">Nour Ibrahim</p>
+                      <p class="cell-user__email">nour.ib@email.com</p>
+                    </div>
+                  </div>
+                </td>
+                <td>nour.ib@email.com</td>
+                <td><span class="status-badge status-badge--banned">Banned</span></td>
+                <td>0</td>
+                <td>Sep 3, 2024</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Unban</button>
+                    <button class="btn-reject">🗑 Delete</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img
+                      src="assets/images/avatar-1.jpg"
+                      alt="Mona Samy"
+                      class="cell-user__avatar lazy"
+                      data-src="assets/images/avatar-1.jpg"
+                    />
+                    <div>
+                      <p class="cell-user__name">Mona Samy</p>
+                      <p class="cell-user__email">mona.s@email.com</p>
+                    </div>
+                  </div>
+                </td>
+                <td>mona.s@email.com</td>
+                <td><span class="status-badge status-badge--user">User</span></td>
+                <td>28</td>
+                <td>Feb 14, 2025</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-edit">✏️ Edit</button>
+                    <button class="btn-ban">🚫 Ban</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="table-pagination">
+            <span>Showing 5 of 8,540 users</span>
+            <div class="pagination-btns">
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>…</button>
+              <button>854</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ════════════════════════════════════
+           PANEL 4 — REVIEWS
+      ════════════════════════════════════ -->
+      <section id="panel-reviews" class="admin-panel">
+        <div class="panel-header">
+          <h2>Review Moderation</h2>
+          <span style="color:var(--text-muted);font-size:.85rem;">42,190 total reviews</span>
+        </div>
+
+        <div class="table-wrapper">
+          <div class="table-toolbar">
+            <h3>⭐ Recent Reviews</h3>
+            <div class="table-search">
+              <input
+                type="text"
+                class="table-search-input"
+                data-table="table-reviews"
+                placeholder="Search reviews..."
+                aria-label="Search reviews"
+              />
+            </div>
+          </div>
+
+          <table class="admin-table" id="table-reviews">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Recipe</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img src="assets/images/avatar-2.jpg" alt="Sara" class="cell-user__avatar lazy" data-src="assets/images/avatar-2.jpg" />
+                    <p class="cell-user__name">Sara Hassan</p>
+                  </div>
+                </td>
+                <td><a href="recipe-details.html">Creamy Garlic Pasta</a></td>
+                <td>⭐⭐⭐⭐⭐ <small>(5)</small></td>
+                <td style="max-width:200px;color:var(--text-secondary);font-size:.8rem;">Absolutely delicious! Made it twice already.</td>
+                <td>Apr 29, 2025</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Keep</button>
+                    <button class="btn-reject">🗑 Remove</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img src="assets/images/avatar-3.jpg" alt="Omar" class="cell-user__avatar lazy" data-src="assets/images/avatar-3.jpg" />
+                    <p class="cell-user__name">Omar Khaled</p>
+                  </div>
+                </td>
+                <td><a href="recipe-details.html">Classic Koshari</a></td>
+                <td>⭐⭐⭐ <small>(3)</small></td>
+                <td style="max-width:200px;color:var(--text-secondary);font-size:.8rem;">Good but needs more spice in my opinion.</td>
+                <td>Apr 27, 2025</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-approve">✓ Keep</button>
+                    <button class="btn-reject">🗑 Remove</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="cell-user">
+                    <img src="assets/images/avatar-4.jpg" alt="Nour" class="cell-user__avatar lazy" data-src="assets/images/avatar-4.jpg" />
+                    <p class="cell-user__name">Nour Ibrahim</p>
+                  </div>
+                </td>
+                <td><a href="recipe-details.html">Smash Burger</a></td>
+                <td>⭐ <small>(1)</small></td>
+                <td style="max-width:200px;color:var(--color-danger);font-size:.8rem;">⚠️ Flagged: contains inappropriate language.</td>
+                <td>Apr 25, 2025</td>
+                <td>
+                  <div class="cell-actions">
+                    <button class="btn-reject">🗑 Remove</button>
+                    <button class="btn-ban">🚫 Ban User</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="table-pagination">
+            <span>Showing 3 of 42,190 reviews</span>
+            <div class="pagination-btns">
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /.admin-main -->
+  </div><!-- /.admin-wrapper -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">🍳 CookBook</h4>
+          <p style="color:#aaa;font-size:.85rem;">Your go-to place for delicious recipes from around the world.</p>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Quick Links</h5>
+          <ul style="display:flex;flex-direction:column;gap:6px;">
+            <li><a href="index.html"   style="color:#aaa;font-size:.85rem;">Home</a></li>
+            <li><a href="recipes.html" style="color:#aaa;font-size:.85rem;">Recipes</a></li>
+            <li><a href="blog.html"    style="color:#aaa;font-size:.85rem;">Blog</a></li>
+            <li><a href="contact.html" style="color:#aaa;font-size:.85rem;">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Tools</h5>
+          <ul style="display:flex;flex-direction:column;gap:6px;">
+            <li><a href="planner.html"           style="color:#aaa;font-size:.85rem;">Meal Planner</a></li>
+            <li><a href="calculator.html"        style="color:#aaa;font-size:.85rem;">Ingredient Calculator</a></li>
+            <li><a href="compare-nutrition.html" style="color:#aaa;font-size:.85rem;">Compare Dishes</a></li>
+            <li><a href="grocery.html"           style="color:#aaa;font-size:.85rem;">Grocery Store</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 style="color:var(--text-inverse);margin-bottom:var(--space-sm);">Follow Us</h5>
+          <div class="flex gap-2" style="flex-wrap:wrap;">
+            <a href="#" aria-label="Facebook"  style="color:#aaa;font-size:1.3rem;">📘</a>
+            <a href="#" aria-label="Instagram" style="color:#aaa;font-size:1.3rem;">📸</a>
+            <a href="#" aria-label="YouTube"   style="color:#aaa;font-size:1.3rem;">▶️</a>
+            <a href="#" aria-label="TikTok"    style="color:#aaa;font-size:1.3rem;">🎵</a>
+          </div>
+        </div>
+      </div>
+      <p style="color:#666;font-size:.8rem;text-align:center;margin-top:var(--space-xl);">
+        &copy; 2025 CookBook &mdash; All rights reserved. | COM209 &ndash; Internet Technology
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       SCRIPTS — main.js first, then dynamic_ui.js
+  ══════════════════════════════════════════════════════ -->
+  <script src="js/main.js"></script>
+  <script src="js/dynamic_ui.js"></script>
+  <script src="js/theme_switcher.js"></script>
+
+  <script>
+    // Fix: dynamic_ui's initAdminPanels uses hidden class,
+    // but we styled panels with display:none / active-panel.
+    // Override to work with our CSS approach.
+    document.addEventListener("DOMContentLoaded", () => {
+      const links  = document.querySelectorAll(".admin-nav-link[data-panel]");
+      const panels = document.querySelectorAll(".admin-panel");
+
+      function showPanel(targetId) {
+        panels.forEach(p => p.classList.remove("active-panel"));
+        links.forEach(l  => l.classList.remove("active"));
+
+        const target = document.getElementById(targetId);
+        const active = document.querySelector(`[data-panel="${targetId}"]`);
+
+        if (target) target.classList.add("active-panel");
+        if (active) active.classList.add("active");
+      }
+
+      links.forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          showPanel(link.dataset.panel);
+        });
+      });
+
+      // Default: show dashboard
+      showPanel("panel-dashboard");
+    });
+  </script>
+
+</body>
+</html>
