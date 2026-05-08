@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Cooking & Recipe Website</title>
+    
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="themes.css">
+</head>
+<body>
+
+    <main class="container py-5">
+        <div class="card auth-card">
+            
+            <div class="card__body text-center mt-3">
+                <a href="index.html" class="navbar__logo">
+                    <img src="assets/logo.png" alt="RecipeBook Logo">
+                    <span>RecipeBook</span>
+                </a>
+                <p class="text-muted mt-2">Join our culinary community</p>
+            </div>
+
+            <div class="tabs">
+                <div class="tabs__nav">
+                    <button type="button" class="tabs__btn active w-half p-3" data-target="login-section" id="tab-login">
+                        Login
+                    </button>
+                    <button type="button" class="tabs__btn w-half p-3" data-target="register-section" id="tab-register">
+                        Register
+                    </button>
+                </div>
+
+                <div class="card__body">
+                    <section id="login-section" class="tabs__content">
+                        <form id="login-form" novalidate>
+                            <div class="field-group mb-3">
+                                <label for="login-email" class="filter-group__label">Email Address</label>
+                                <input type="email" id="login-email" name="email" class="w-full p-2" placeholder="email@example.com">
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="login-password" class="filter-group__label">Password</label>
+                                <div class="input-password-wrapper">
+                                    <input type="password" id="login-password" name="password" class="w-full p-2" placeholder="••••••••">
+                                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                        <span>Show</span>
+                                    </button>
+                                </div>
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-4 auth-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="remember"> Remember Me
+                                </label>
+                                <a href="#" class="text-primary">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </form>
+                    </section>
+
+                    <section id="register-section" class="tabs__content">
+                        <form id="register-form" novalidate>
+                            <div class="field-group mb-3">
+                                <label for="reg-name" class="filter-group__label">Full Name</label>
+                                <input type="text" id="reg-name" name="fullname" class="w-full p-2" placeholder="John Doe">
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="reg-email" class="filter-group__label">Email Address</label>
+                                <input type="email" id="reg-email" name="email" class="w-full p-2" placeholder="email@example.com">
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="reg-password" class="filter-group__label">Password</label>
+                                <div class="input-password-wrapper">
+                                    <input type="password" id="reg-password" name="password" class="w-full p-2" placeholder="Minimum 8 characters">
+                                    <button type="button" class="password-toggle">
+                                        <span>Show</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="password-strength">
+                                    <div class="password-strength__bar">
+                                        <div class="password-strength__fill" id="strength-bar"></div>
+                                    </div>
+                                    <div class="password-strength__label" id="strength-text">Strength: Empty</div>
+                                </div>
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="reg-confirm" class="filter-group__label">Confirm Password</label>
+                                <input type="password" id="reg-confirm" name="confirmPassword" class="w-full p-2" placeholder="Repeat password">
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="reg-dob" class="filter-group__label">Date of Birth (Optional)</label>
+                                <input type="date" id="reg-dob" name="dob" class="w-full p-2">
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-3">
+                                <label for="reg-pfp" class="filter-group__label">Profile Picture</label>
+                                <input type="file" id="reg-pfp" name="profilePic" class="w-full p-2" accept="image/*">
+                                <div class="img-preview mt-2" id="pfp-preview"></div>
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <div class="field-group mb-4">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="terms" id="reg-terms">
+                                    <span>I agree to the <a href="#" class="text-primary">Terms & Conditions</a></span>
+                                </label>
+                                <span class="error-msg"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="theme-controls">
+        <button class="theme-option btn" data-theme="theme-light">Light</button>
+        <button class="theme-option btn" data-theme="theme-dark">Dark</button>
+        <button class="theme-option btn" data-theme="theme-autumn">Autumn</button>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="theme_switcher.js"></script>
+    <script src="validation.js"></script>
+</body>
+</html>
