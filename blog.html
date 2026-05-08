@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cooking Blog</title>
+    <link rel="stylesheet" href="global.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <h1 class="logo">All Recipes</h1>
+    </div>
+</header>
+
+<div class="container">
+
+    <h1>Cooking Blog</h1>
+    <p>Learn amazing cooking tips & techniques.</p>
+
+    <br>
+
+    <button class="btn filter-btn" data-category="all">All</button>
+    <button class="btn filter-btn" data-category="tips">Tips</button>
+    <button class="btn filter-btn" data-category="nutrition">Nutrition</button>
+
+    <br><br>
+
+    <div class="blog-layout">
+
+        <!-- LEFT -->
+        <div>
+
+            <div class="blog-grid">
+
+                <div class="blog-card post" data-category="tips">
+                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554">
+                    <div class="blog-content">
+                        <span class="badge">Tips</span>
+
+                        <h3>Best Cooking Hacks</h3>
+
+                        <p><b>By Ahmed</b> • 5 min read</p>
+
+                        <p>Discover simple cooking hacks for your kitchen...</p>
+
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </div>
+
+                <div class="blog-card post" data-category="nutrition">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061">
+                    <div class="blog-content">
+                        <span class="badge">Nutrition</span>
+
+                        <h3>Healthy Food Guide</h3>
+
+                        <p><b>By Sara</b> • 7 min read</p>
+
+                        <p>Healthy eating is important &mdash; especially today.</p>
+
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <h3>Popular Posts</h3>
+
+            <ul>
+                <li>Easy Pasta</li>
+                <li>Healthy Salad</li>
+                <li>Quick Pizza</li>
+            </ul>
+
+            <br>
+
+            <h3>Search</h3>
+
+            <input type="text" id="searchInput" placeholder="Search posts">
+
+        </aside>
+
+    </div>
+
+    <!-- ARTICLE -->
+    <section class="article hidden" id="article">
+
+        <h1>Cooking Like a Pro</h1>
+
+        <p><b>Published:</b> May 2025</p>
+
+        <h2>Ingredients</h2>
+
+        <ul>
+            <li>Tomatoes</li>
+            <li>Cheese</li>
+            <li>Olive Oil</li>
+        </ul>
+
+        <h2>Steps</h2>
+
+        <ol>
+            <li>Prepare ingredients</li>
+            <li>Cook for 20 minutes</li>
+            <li>Serve hot</li>
+        </ol>
+
+        <blockquote>
+            “Always taste your food before serving.”
+        </blockquote>
+
+        <figure>
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836">
+            <figcaption>Delicious homemade meal</figcaption>
+        </figure>
+
+        <p>
+            This recipe is <i>simple</i> and <b>delicious</b> &copy; 2025
+        </p>
+
+    </section>
+
+</div>
+
+<script>
+
+const buttons = document.querySelectorAll(".filter-btn");
+const posts = document.querySelectorAll(".post");
+
+buttons.forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        let category = btn.dataset.category;
+
+        posts.forEach(post => {
+
+            if(category === "all" || post.dataset.category === category){
+                post.style.display = "block";
+            }else{
+                post.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
+
+document.querySelectorAll(".read-more").forEach(link => {
+
+    link.addEventListener("click", function(e){
+
+        e.preventDefault();
+
+        document.getElementById("article")
+        .classList.toggle("hidden");
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
