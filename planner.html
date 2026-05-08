@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meal Planner</title>
+    <link rel="stylesheet" href="global.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <h1 class="logo">Weekly Meal Planner</h1>
+    </div>
+</header>
+
+<div class="container">
+
+    <button class="btn" onclick="randomPlan()">Random Plan</button>
+    <button class="btn" onclick="clearWeek()">Clear Week</button>
+
+    <br><br>
+
+    <table>
+
+        <tr>
+            <th>Meal</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+
+        <tr class="breakfast">
+            <td>Breakfast</td>
+
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+        </tr>
+
+        <tr class="lunch">
+            <td>Lunch</td>
+
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+        </tr>
+
+        <tr class="dinner">
+            <td>Dinner</td>
+
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+            <td class="meal-cell"></td>
+        </tr>
+
+    </table>
+
+</div>
+
+<script>
+
+const meals = [
+    "Pizza",
+    "Pasta",
+    "Burger",
+    "Salad",
+    "Chicken"
+];
+
+function randomPlan(){
+
+    let cells = document.querySelectorAll(".meal-cell");
+
+    cells.forEach(cell => {
+
+        let meal = meals[Math.floor(Math.random() * meals.length)];
+
+        cell.innerHTML = `
+            <div class="recipe-card">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836">
+                <p>${meal}</p>
+                <button class="btn" onclick="removeMeal(this)">X</button>
+            </div>
+        `;
+    });
+
+}
+
+function removeMeal(button){
+    button.parentElement.remove();
+}
+
+function clearWeek(){
+
+    let cells = document.querySelectorAll(".meal-cell");
+
+    cells.forEach(cell => {
+        cell.innerHTML = "";
+    });
+
+}
+
+</script>
+
+</body>
+</html>
