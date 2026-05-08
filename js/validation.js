@@ -148,7 +148,7 @@ function updateStrengthBar(passwordValue) {
     { text: "", width: "0%", color: "transparent" },
     { text: "Weak", width: "25%", color: "var(--color-danger)" },
     { text: "Fair", width: "50%", color: "var(--color-warning)" },
-    { text: "Strong", width: "75%", color: "var(--color-primary-light)" },
+    { text: "Strong", width: "75%", color: "#8BC34A" },
     { text: "Very Strong", width: "100%", color: "var(--color-success)" },
   ];
 

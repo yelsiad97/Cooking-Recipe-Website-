@@ -240,18 +240,27 @@ function initDynamicIngredients() {
   if (!addBtn || !container) return;
 
   addBtn.addEventListener("click", () => {
-    const uniqueStepId = Date.now();
+    const uid = Date.now();
     const row = document.createElement("div");
-    row.className = "step-row flex gap-3 items-start fade-in"; 
+    row.className = "ingredient-row flex gap-2 items-center fade-in";
     row.innerHTML = `
-      <span class="step-number font-bold text-primary mt-2">Step</span>
-      <textarea class="form-control w-full" name="step-${uniqueStepId}" rows="2"
-                placeholder="Describe this step..."></textarea>
-      <button type="button" class="btn btn-danger btn-sm remove-step-btn mt-1"
-              aria-label="Remove step">✕</button>
+      <input type="number" class="form-control ing-qty" name="qty-${uid}"
+             placeholder="Qty" min="0" step="any" style="width:70px" />
+      <select class="form-control ing-unit" name="unit-${uid}" style="width:100px">
+        <option value="cups">cups</option>
+        <option value="grams">grams</option>
+        <option value="tbsp">tbsp</option>
+        <option value="tsp">tsp</option>
+        <option value="ml">ml</option>
+        <option value="oz">oz</option>
+        <option value="pieces">pieces</option>
+      </select>
+      <input type="text" class="form-control ing-name flex-1" name="ing-${uid}"
+             placeholder="Ingredient name (e.g. olive oil)" />
+      <button type="button" class="btn btn-danger btn-sm remove-ingredient-btn"
+              aria-label="Remove ingredient">✕</button>
     `;
     container.appendChild(row);
-    updateStepNumbers();
   });
 
   // Event delegation — handles all remove buttons including future ones

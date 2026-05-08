@@ -111,7 +111,7 @@
 
 .form-control.error {
   border-color: var(--color-danger);
-  box-shadow: 0 0 0 3px var(--color-danger-light);
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
 }
 
 /* Error message */

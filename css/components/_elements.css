@@ -500,3 +500,177 @@
   min-width: 36px;
   text-align: right;
 }
+
+
+/* ==========================================================================
+   FADE-IN ANIMATION
+   Used by dynamic_ui.js when appending new ingredient/step rows.
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease both;
+}
+
+
+/* ==========================================================================
+   INGREDIENT ITEM — checked / struck-through state
+   Toggled by dynamic_ui.js initIngredientCheckboxes()
+   ========================================================================== */
+
+.ingredient-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--border-color);
+  transition: opacity var(--transition-fast);
+}
+
+.ingredient-item:last-child {
+  border-bottom: none;
+}
+
+.ingredient-item.checked {
+  opacity: 0.5;
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.ingredient-item.checked input[type="checkbox"] {
+  accent-color: var(--color-success);
+}
+
+
+/* ==========================================================================
+   INGREDIENT ROW — submit-recipe.html dynamic rows
+   ========================================================================== */
+
+.ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  animation: fadeIn 0.25s ease both;
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  animation: fadeIn 0.25s ease both;
+}
+
+.step-number {
+  min-width: 52px;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  padding-top: 0.6rem;
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   REVIEW FORM (recipe-details.html)
+   Hidden by default, toggled by dynamic_ui.js
+   ========================================================================== */
+
+.review-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+  animation: fadeIn 0.3s ease both;
+}
+
+.review-form.hidden {
+  display: none;
+}
+
+
+/* ==========================================================================
+   FILTER PANEL (recipes.html)
+   ========================================================================== */
+
+.filter-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-panel.hidden {
+  display: none;
+}
+
+.filter-panel__title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-md);
+}
+
+.filter-group {
+  margin-bottom: var(--space-md);
+}
+
+.filter-group__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+  display: block;
+}
+
+/* ==========================================================================
+   GLOBAL ICON SIZE GUARD
+   All icons in the project are either 24x24 (SVG) or 512x512 (PNG).
+   This rule ensures 512x512 PNGs never render at full size.
+   Individual components override this where they need a different size.
+   ========================================================================== */
+
+/* Step card icons (How It Works section — 28px) */
+.step-card__icon {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+}
+
+/* Cuisine tile icons (overlay — 32px) */
+.cuisine-tile__icon {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px;
+  max-height: 32px;
+  object-fit: contain;
+}
+
+/* Social icons in footer */
+.social-icons a img {
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px;
+  max-height: 18px;
+  object-fit: contain;
+}
+
+/* Table cell images */
+.cell-img {
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  object-fit: cover;
+}

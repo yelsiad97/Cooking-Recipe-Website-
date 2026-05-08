@@ -9,6 +9,11 @@
               background-color var(--transition-normal);
 }
 
+/* Needed so mobile dropdown positions relative to navbar */
+.navbar__inner {
+  position: relative;
+}
+
 .navbar.scrolled {
   box-shadow: var(--shadow-md);
 }
@@ -37,7 +42,11 @@
 
 .navbar__logo img {
   height: 36px;
-  width: auto;
+  width: 36px;
+  max-height: 36px;
+  max-width: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .navbar__logo:hover {
@@ -51,6 +60,12 @@
   align-items: center;
   gap: var(--space-xs);
   list-style: none;
+  flex-direction: row;
+  position: static;
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 
 .navbar__links a {
@@ -152,4 +167,15 @@
     width: 100%;
     padding: var(--space-sm) var(--space-md);
   }
+}
+
+/* ==========================================================================
+   GLOBAL ICON SIZE GUARD
+   Prevents 512x512 PNGs from rendering at full size anywhere in the navbar.
+   ========================================================================== */
+.navbar__logo img,
+.navbar__actions img,
+.navbar__links img {
+  max-width: 36px;
+  max-height: 36px;
 }

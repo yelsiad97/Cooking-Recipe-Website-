@@ -99,5 +99,8 @@ function initThemeSwitcher() {
 
 
 
-// Init events on DOM ready
+// Apply saved theme IMMEDIATELY (before DOMContentLoaded) to prevent flash of wrong theme
+loadSavedTheme();
+
+// Init click/hover events after DOM is ready
 document.addEventListener('DOMContentLoaded', initThemeSwitcher);

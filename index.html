@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RecipeHub — Discover, Cook &amp; Share</title>
+  <title>RecipeHub &mdash; Discover, Cook &amp; Share</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- CSS -->
+  <!-- CSS — in correct load order -->
   <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
@@ -19,41 +19,51 @@
 
 <body>
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        HEADER / NAVBAR
-  ═══════════════════════════════ -->
-  <header id="site-header">
-    <div class="container">
-      <nav class="navbar" aria-label="Main navigation">
+       Classes from: _navbar.css (.navbar .navbar__inner .navbar__logo
+       .navbar__links .navbar__actions .navbar__hamburger)
+       Scroll shadow added by main.js via .scrolled class
+  ═══════════════════════════════════════════ -->
+  <header>
+    <nav class="navbar" id="main-navbar" aria-label="Main navigation">
+      <div class="navbar__inner container">
 
-        <a href="index.html" class="logo">🍳 RecipeHub</a>
+        <!-- Logo -->
+        <a href="index.html" class="navbar__logo" aria-label="RecipeHub Home">
+          <img src="assets/images/logo.jpg" alt="RecipeHub" />
+          RecipeHub
+        </a>
 
-        <ul class="nav-links" id="nav-links">
-          <li><a href="index.html"         class="nav-link active">Home</a></li>
-          <li><a href="recipes.html"        class="nav-link">Recipes</a></li>
-          <li><a href="blog.html"           class="nav-link">Blog</a></li>
-          <li><a href="planner.html"        class="nav-link">Planner</a></li>
-          <li><a href="grocery.html"        class="nav-link">Grocery</a></li>
-          <li><a href="contact.html"        class="nav-link">Contact</a></li>
+        <!-- Nav Links — main.js adds .active to current page link -->
+        <ul class="navbar__links" id="navbar-links" role="list">
+          <li><a href="index.html"            class="nav-link" data-page="index.html">Home</a></li>
+          <li><a href="recipes.html"          class="nav-link" data-page="recipes.html">Recipes</a></li>
+          <li><a href="blog.html"             class="nav-link" data-page="blog.html">Blog</a></li>
+          <li><a href="planner.html"          class="nav-link" data-page="planner.html">Planner</a></li>
+          <li><a href="grocery.html"          class="nav-link" data-page="grocery.html">Grocery</a></li>
+          <li><a href="contact.html"          class="nav-link" data-page="contact.html">Contact</a></li>
         </ul>
 
-        <div class="nav-actions">
+        <!-- Right actions -->
+        <div class="navbar__actions">
 
-          <!-- Theme Switcher -->
-          <div class="theme-dropdown">
-            <button class="theme-dropdown__toggle" aria-haspopup="true" aria-expanded="false">
-              <span class="current-theme-icon">🌿</span>
+          <!-- Theme Switcher — theme_switcher.js reads .theme-option[data-theme] -->
+          <div class="theme-dropdown" role="navigation" aria-label="Theme switcher">
+            <button class="btn btn-ghost btn-sm theme-dropdown__toggle"
+                    aria-haspopup="true" aria-expanded="false">
+              <span class="current-theme-icon icon-sun">&#127807;</span>
               <span class="current-theme-label">Light</span>
-              <span>&#9660;</span>
+              <span aria-hidden="true">&#9662;</span>
             </button>
-            <div class="theme-dropdown__menu">
-              <button class="theme-option" data-theme="theme-light">
+            <div class="theme-dropdown__menu" role="menu">
+              <button class="theme-option" data-theme="theme-light" role="menuitem">
                 <span class="theme-option__dot"></span> Light Green
               </button>
-              <button class="theme-option" data-theme="theme-dark">
+              <button class="theme-option" data-theme="theme-dark" role="menuitem">
                 <span class="theme-option__dot"></span> Dark Mode
               </button>
-              <button class="theme-option" data-theme="theme-autumn">
+              <button class="theme-option" data-theme="theme-autumn" role="menuitem">
                 <span class="theme-option__dot"></span> Warm Autumn
               </button>
             </div>
@@ -62,56 +72,90 @@
           <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
           <a href="auth.html" class="btn btn-primary btn-sm">Register</a>
 
-          <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-            <span></span><span></span><span></span>
+          <!-- Hamburger — toggled by main.js initMobileMenu() -->
+          <button class="navbar__hamburger" id="hamburger-btn"
+                  aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
-
         </div>
-      </nav>
-    </div>
+
+      </div>
+    </nav>
   </header>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        HERO SECTION
-  ═══════════════════════════════ -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <span class="hero-eyebrow">🍽️ Over 500 Recipes &amp; Counting</span>
-      <h1 class="hero-title">
-        Cook Something <span class="hero-title-accent">Unforgettable</span> Tonight
+       .hero--full defined in layout.css
+       Background image set via inline style (data, not CSS logic)
+       Animations: heroFadeUp keyframes in layout.css
+  ═══════════════════════════════════════════ -->
+  <section class="hero--full" id="hero"
+           style="background-image: url('assets/images/hero-bg.jpg');"
+           aria-label="Hero banner">
+
+    <div class="hero__content">
+
+      <span class="badge badge-primary mb-3" style="font-size:0.72rem;letter-spacing:0.1em;">
+        &#127374;&nbsp; Over 500 Recipes &amp; Counting
+      </span>
+
+      <h1 class="hero__title">
+        Cook Something <span style="color:var(--color-accent);">Unforgettable</span> Tonight
       </h1>
-      <p class="hero-tagline">
-        Discover recipes from around the world &mdash; from quick weeknight dinners
-        to impressive dinner-party showstoppers.
+
+      <p class="hero__tagline">
+        Discover thousands of recipes from around the world &mdash; from quick weeknight
+        dinners to impressive dinner&#8209;party showstoppers.
       </p>
-      <div class="hero-actions">
+
+      <div class="hero__cta flex justify-center gap-3" style="flex-wrap:wrap;">
         <a href="recipes.html" class="btn btn-primary btn-lg">Browse Recipes</a>
-        <a href="submit-recipe.html" class="btn btn-secondary btn-lg">Share a Recipe</a>
+        <a href="submit-recipe.html"
+           class="btn btn-lg"
+           style="background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.4);">
+          Share a Recipe
+        </a>
       </div>
+
     </div>
+
+    <!-- Scroll hint (purely decorative) -->
+    <span class="hero-scroll-hint" aria-hidden="true">Scroll &#8595;</span>
+
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        FEATURED RECIPES
-  ═══════════════════════════════ -->
-  <section class="section" id="featured">
+       .card .card__img-wrapper .card__body .card__footer from _cards.css
+       .badge .stars from _buttons.css / _forms.css
+  ═══════════════════════════════════════════ -->
+  <section class="index-section" id="featured" aria-labelledby="featured-title">
     <div class="container">
 
-      <div class="section-header">
-        <span class="section-label">Staff Picks</span>
-        <h2 class="section-title">Featured Recipes</h2>
-        <p class="section-subtitle">Handpicked by our chefs &mdash; tried, tested, and absolutely delicious.</p>
-      </div>
+      <header class="index-section__header">
+        <span class="index-section__label">Staff Picks</span>
+        <h2 class="index-section__title" id="featured-title">Featured Recipes</h2>
+        <p class="index-section__subtitle">
+          Handpicked by our chefs &mdash; tried, tested, and absolutely delicious.
+        </p>
+      </header>
 
       <div class="recipes-grid">
 
-        <a href="recipe-details.html" class="card-link">
-          <article class="card" data-cuisine="italian">
+        <!-- Card 1 — Pasta -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
             <div class="card__img-wrapper">
-              <img class="card__img lazy" data-src="assets/images/recipe-pasta.jpg" src="assets/images/recipe-pasta.jpg" alt="Creamy Pasta" />
-              <span class="badge badge-primary card-cuisine-badge">Italian</span>
+              <img src="assets/images/recipe-pasta.jpg"
+                   alt="Creamy Garlic Parmesan Pasta"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-pasta.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">Italian</span>
             </div>
             <div class="card__body">
               <div class="card__meta">
@@ -126,22 +170,29 @@
               </div>
               <h3 class="card__title">Creamy Garlic Parmesan Pasta</h3>
               <div class="card__info">
-                <img src="assets/icons/clock.svg" alt="Time" /> 25 min &nbsp;&middot;&nbsp;
-                <img src="assets/icons/flame.svg" alt="Calories" /> 520 kcal
+                <img src="assets/icons/clock.png" alt="" />
+                25 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                520 kcal
               </div>
             </div>
             <div class="card__footer">
               <span class="badge badge-easy">Easy</span>
-              <span class="card-servings">4 servings</span>
+              <span class="text-muted" style="font-size:0.8rem;">4 servings</span>
             </div>
           </article>
         </a>
 
-        <a href="recipe-details.html" class="card-link">
-          <article class="card" data-cuisine="egyptian">
+        <!-- Card 2 — Koshari -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
             <div class="card__img-wrapper">
-              <img class="card__img lazy" data-src="assets/images/recipe-koshari.jpg" src="assets/images/recipe-koshari.jpg" alt="Koshari" />
-              <span class="badge badge-primary card-cuisine-badge">Egyptian</span>
+              <img src="assets/images/recipe-koshari.jpg"
+                   alt="Traditional Egyptian Koshari"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-koshari.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">Egyptian</span>
             </div>
             <div class="card__body">
               <div class="card__meta">
@@ -156,22 +207,29 @@
               </div>
               <h3 class="card__title">Traditional Egyptian Koshari</h3>
               <div class="card__info">
-                <img src="assets/icons/clock.svg" alt="Time" /> 45 min &nbsp;&middot;&nbsp;
-                <img src="assets/icons/flame.svg" alt="Calories" /> 420 kcal
+                <img src="assets/icons/clock.png" alt="" />
+                45 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                420 kcal
               </div>
             </div>
             <div class="card__footer">
               <span class="badge badge-medium">Medium</span>
-              <span class="card-servings">6 servings</span>
+              <span class="text-muted" style="font-size:0.8rem;">6 servings</span>
             </div>
           </article>
         </a>
 
-        <a href="recipe-details.html" class="card-link">
-          <article class="card" data-cuisine="american">
+        <!-- Card 3 — Burger -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
             <div class="card__img-wrapper">
-              <img class="card__img lazy" data-src="assets/images/recipe-burger.jpg" src="assets/images/recipe-burger.jpg" alt="Burger" />
-              <span class="badge badge-primary card-cuisine-badge">American</span>
+              <img src="assets/images/recipe-burger.jpg"
+                   alt="Smash Burger with Secret Sauce"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-burger.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">American</span>
             </div>
             <div class="card__body">
               <div class="card__meta">
@@ -186,22 +244,29 @@
               </div>
               <h3 class="card__title">Smash Burger with Secret Sauce</h3>
               <div class="card__info">
-                <img src="assets/icons/clock.svg" alt="Time" /> 20 min &nbsp;&middot;&nbsp;
-                <img src="assets/icons/flame.svg" alt="Calories" /> 680 kcal
+                <img src="assets/icons/clock.png" alt="" />
+                20 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                680 kcal
               </div>
             </div>
             <div class="card__footer">
               <span class="badge badge-easy">Easy</span>
-              <span class="card-servings">2 servings</span>
+              <span class="text-muted" style="font-size:0.8rem;">2 servings</span>
             </div>
           </article>
         </a>
 
-        <a href="recipe-details.html" class="card-link">
-          <article class="card" data-cuisine="french">
+        <!-- Card 4 — Steak -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
             <div class="card__img-wrapper">
-              <img class="card__img lazy" data-src="assets/images/recipe-steak.jpg" src="assets/images/recipe-steak.jpg" alt="Steak" />
-              <span class="badge badge-primary card-cuisine-badge">French</span>
+              <img src="assets/images/recipe-steak.jpg"
+                   alt="Pan-Seared Steak au Poivre"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-steak.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">French</span>
             </div>
             <div class="card__body">
               <div class="card__meta">
@@ -216,43 +281,124 @@
               </div>
               <h3 class="card__title">Pan-Seared Steak au Poivre</h3>
               <div class="card__info">
-                <img src="assets/icons/clock.svg" alt="Time" /> 30 min &nbsp;&middot;&nbsp;
-                <img src="assets/icons/flame.svg" alt="Calories" /> 750 kcal
+                <img src="assets/icons/clock.png" alt="" />
+                30 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                750 kcal
               </div>
             </div>
             <div class="card__footer">
               <span class="badge badge-hard">Hard</span>
-              <span class="card-servings">2 servings</span>
+              <span class="text-muted" style="font-size:0.8rem;">2 servings</span>
             </div>
           </article>
         </a>
 
+        <!-- Card 5 — Pizza -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
+            <div class="card__img-wrapper">
+              <img src="assets/images/recipe-pizza.jpg"
+                   alt="Neapolitan Margherita Pizza"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-pizza.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">Italian</span>
+            </div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="stars">
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star">&#9733;</span>
+                </span>
+                <span class="stars-count">4.5 (176)</span>
+              </div>
+              <h3 class="card__title">Neapolitan Margherita Pizza</h3>
+              <div class="card__info">
+                <img src="assets/icons/clock.png" alt="" />
+                40 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                590 kcal
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="badge badge-medium">Medium</span>
+              <span class="text-muted" style="font-size:0.8rem;">4 servings</span>
+            </div>
+          </article>
+        </a>
+
+        <!-- Card 6 — Salad -->
+        <a href="recipe-details.html" class="recipe-card-link" style="text-decoration:none;color:inherit;display:block;">
+          <article class="card">
+            <div class="card__img-wrapper">
+              <img src="assets/images/recipe-salad.jpg"
+                   alt="Mediterranean Fattoush Salad"
+                   class="card__img lazy"
+                   data-src="assets/images/recipe-salad.jpg" />
+              <span class="badge badge-primary"
+                    style="position:absolute;top:12px;left:12px;">Egyptian</span>
+            </div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="stars">
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star filled">&#9733;</span>
+                  <span class="star">&#9733;</span>
+                </span>
+                <span class="stars-count">4.3 (95)</span>
+              </div>
+              <h3 class="card__title">Mediterranean Fattoush Salad</h3>
+              <div class="card__info">
+                <img src="assets/icons/clock.png" alt="" />
+                15 min &nbsp;&middot;&nbsp;
+                <img src="assets/icons/flame.png" alt="" />
+                210 kcal
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="badge badge-easy">Easy</span>
+              <span class="text-muted" style="font-size:0.8rem;">4 servings</span>
+            </div>
+          </article>
+        </a>
+
+      </div><!-- /.recipes-grid -->
+
+      <div class="text-center mt-5">
+        <a href="recipes.html" class="btn btn-outline">View All Recipes &#8594;</a>
       </div>
 
-      <div class="section-cta">
-        <a href="recipes.html" class="btn btn-outline">View All Recipes &rarr;</a>
-      </div>
-
-    </div>
+    </div><!-- /.container -->
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        BROWSE BY CUISINE
-  ═══════════════════════════════ -->
-  <section class="section section-alt" id="cuisines">
+       .cuisine-tile / .cuisine-tile__img / .cuisine-tile__overlay
+       defined in layout.css (.index-cuisine-grid section)
+  ═══════════════════════════════════════════ -->
+  <section class="index-section index-section--alt" id="cuisines" aria-labelledby="cuisines-title">
     <div class="container">
 
-      <div class="section-header">
-        <span class="section-label">World Flavours</span>
-        <h2 class="section-title">Browse by Cuisine</h2>
-        <p class="section-subtitle">Pick your favourite cuisine and explore hundreds of authentic recipes.</p>
-      </div>
+      <header class="index-section__header">
+        <span class="index-section__label">World Flavours</span>
+        <h2 class="index-section__title" id="cuisines-title">Browse by Cuisine</h2>
+        <p class="index-section__subtitle">
+          Pick your favourite cuisine and explore hundreds of authentic recipes.
+        </p>
+      </header>
 
-      <div class="cuisine-grid">
+      <div class="index-cuisine-grid">
 
         <a href="recipes.html?cuisine=italian" class="cuisine-tile" aria-label="Italian recipes">
-          <img src="assets/images/italian.jpg" alt="Italian Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/italian.jpg" />
+          <img src="assets/images/italian.jpg" alt="Italian Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/italian.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/italian.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">Italian</span>
@@ -260,7 +406,8 @@
         </a>
 
         <a href="recipes.html?cuisine=egyptian" class="cuisine-tile" aria-label="Egyptian recipes">
-          <img src="assets/images/egyptian.jpg" alt="Egyptian Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/egyptian.jpg" />
+          <img src="assets/images/egyptian.jpg" alt="Egyptian Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/egyptian.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/egyptian.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">Egyptian</span>
@@ -268,7 +415,8 @@
         </a>
 
         <a href="recipes.html?cuisine=asian" class="cuisine-tile" aria-label="Asian recipes">
-          <img src="assets/images/asian.jpg" alt="Asian Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/asian.jpg" />
+          <img src="assets/images/asian.jpg" alt="Asian Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/asian.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/asian.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">Asian</span>
@@ -276,7 +424,8 @@
         </a>
 
         <a href="recipes.html?cuisine=mexican" class="cuisine-tile" aria-label="Mexican recipes">
-          <img src="assets/images/mexican.jpg" alt="Mexican Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/mexican.jpg" />
+          <img src="assets/images/mexican.jpg" alt="Mexican Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/mexican.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/mexican.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">Mexican</span>
@@ -284,7 +433,8 @@
         </a>
 
         <a href="recipes.html?cuisine=french" class="cuisine-tile" aria-label="French recipes">
-          <img src="assets/images/french.jpg" alt="French Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/french.jpg" />
+          <img src="assets/images/french.jpg" alt="French Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/french.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/french.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">French</span>
@@ -292,31 +442,33 @@
         </a>
 
         <a href="recipes.html?cuisine=american" class="cuisine-tile" aria-label="American recipes">
-          <img src="assets/images/american.jpg" alt="American Cuisine" class="cuisine-tile__img lazy" data-src="assets/images/american.jpg" />
+          <img src="assets/images/american.jpg" alt="American Cuisine"
+               class="cuisine-tile__img lazy" data-src="assets/images/american.jpg" />
           <div class="cuisine-tile__overlay">
             <img src="assets/icons/american.png" alt="" class="cuisine-tile__icon" />
             <span class="cuisine-tile__name">American</span>
           </div>
         </a>
 
-      </div>
+      </div><!-- /.index-cuisine-grid -->
     </div>
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        HOW IT WORKS
-  ═══════════════════════════════ -->
-  <section class="section" id="how-it-works">
+       .index-steps-grid / .step-card defined in layout.css
+  ═══════════════════════════════════════════ -->
+  <section class="index-section" id="how-it-works" aria-labelledby="hiw-title">
     <div class="container">
 
-      <div class="section-header">
-        <span class="section-label">Simple as 1-2-3</span>
-        <h2 class="section-title">How It Works</h2>
-        <p class="section-subtitle">From craving to plate in three easy steps.</p>
-      </div>
+      <header class="index-section__header">
+        <span class="index-section__label">Simple as 1-2-3</span>
+        <h2 class="index-section__title" id="hiw-title">How It Works</h2>
+        <p class="index-section__subtitle">From craving to plate in three easy steps.</p>
+      </header>
 
-      <div class="steps-grid">
+      <div class="index-steps-grid">
 
         <div class="step-card">
           <div class="step-card__number">1</div>
@@ -324,7 +476,7 @@
           <h3 class="step-card__title">Search</h3>
           <p class="step-card__desc">
             Type any ingredient, dish name, or cuisine. Filter by cook time,
-            difficulty, and dietary tags.
+            difficulty, and dietary tags to find exactly what you need.
           </p>
         </div>
 
@@ -334,17 +486,17 @@
           <h3 class="step-card__title">Save</h3>
           <p class="step-card__desc">
             Bookmark your favourites, build weekly meal plans, and create
-            shopping lists automatically.
+            shopping lists automatically &mdash; all in one place.
           </p>
         </div>
 
         <div class="step-card">
           <div class="step-card__number">3</div>
-          <img src="assets/icons/flame.svg" alt="" class="step-card__icon" />
+          <img src="assets/icons/flame.png" alt="" class="step-card__icon" />
           <h3 class="step-card__title">Cook</h3>
           <p class="step-card__desc">
             Follow step-by-step instructions with embedded video tutorials.
-            Rate and share when you&rsquo;re done.
+            Rate and share your creations when you&rsquo;re done.
           </p>
         </div>
 
@@ -353,116 +505,163 @@
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        LATEST FROM THE BLOG
-  ═══════════════════════════════ -->
-  <section class="section section-alt" id="blog-preview">
+       .card .card__img-wrapper .card__body from _cards.css
+  ═══════════════════════════════════════════ -->
+  <section class="index-section index-section--alt" id="blog" aria-labelledby="blog-title">
     <div class="container">
 
-      <div class="section-header">
-        <span class="section-label">Tips &amp; Inspiration</span>
-        <h2 class="section-title">Latest from the Blog</h2>
-        <p class="section-subtitle">Cooking tips, nutrition guides, and kitchen hacks from our team.</p>
-      </div>
+      <header class="index-section__header">
+        <span class="index-section__label">Tips &amp; Inspiration</span>
+        <h2 class="index-section__title" id="blog-title">Latest from the Blog</h2>
+        <p class="index-section__subtitle">
+          Cooking tips, nutrition guides, and kitchen hacks from our team.
+        </p>
+      </header>
 
-      <div class="blog-grid">
+      <div class="index-blog-grid">
 
-        <a href="blog.html" class="card card-link">
+        <!-- Blog 1 -->
+        <a href="blog.html" class="card" style="text-decoration:none;color:inherit;display:block;">
           <div class="card__img-wrapper">
-            <img class="card__img lazy" data-src="assets/images/blog-1.jpg" src="assets/images/blog-1.jpg" alt="Blog 1" />
+            <img src="assets/images/blog-1.jpg" alt="Kitchen hacks article"
+                 class="card__img lazy" data-src="assets/images/blog-1.jpg" />
           </div>
           <div class="card__body">
             <div class="card__meta">
               <span class="badge badge-green">Tips &amp; Hacks</span>
-              <span class="card__info">May 1, 2025 &middot; 4 min read</span>
+              <span class="text-muted">May 1, 2025 &middot; 4 min read</span>
             </div>
-            <h3 class="card__title">10 Kitchen Hacks That Will Change How You Cook Forever</h3>
-            <p class="card__excerpt">From keeping herbs fresh for weeks to perfectly poaching eggs &mdash; these tricks are game-changers.</p>
+            <h3 class="card__title">
+              10 Kitchen Hacks That Will Change How You Cook Forever
+            </h3>
+            <p class="card__excerpt">
+              From keeping herbs fresh for weeks to perfectly poaching eggs every
+              time &mdash; these tricks are game-changers.
+            </p>
+          </div>
+          <div class="card__footer">
+            <span class="text-muted" style="font-size:0.8rem;">Read More &#8594;</span>
           </div>
         </a>
 
-        <a href="blog.html" class="card card-link">
+        <!-- Blog 2 -->
+        <a href="blog.html" class="card" style="text-decoration:none;color:inherit;display:block;">
           <div class="card__img-wrapper">
-            <img class="card__img lazy" data-src="assets/images/blog-2.jpg" src="assets/images/blog-2.jpg" alt="Blog 2" />
+            <img src="assets/images/blog-2.jpg" alt="Budget eating article"
+                 class="card__img lazy" data-src="assets/images/blog-2.jpg" />
           </div>
           <div class="card__body">
             <div class="card__meta">
               <span class="badge badge-orange">Nutrition</span>
-              <span class="card__info">Apr 22, 2025 &middot; 6 min read</span>
+              <span class="text-muted">Apr 22, 2025 &middot; 6 min read</span>
             </div>
-            <h3 class="card__title">The Complete Guide to Eating Well on a Budget</h3>
-            <p class="card__excerpt">Healthy eating doesn&rsquo;t have to cost a fortune. We break down the smartest ways to shop and eat well.</p>
+            <h3 class="card__title">
+              The Complete Guide to Eating Well on a Budget
+            </h3>
+            <p class="card__excerpt">
+              Healthy eating doesn&rsquo;t have to cost a fortune. We break down
+              the smartest ways to shop, prep, and eat nutritiously.
+            </p>
+          </div>
+          <div class="card__footer">
+            <span class="text-muted" style="font-size:0.8rem;">Read More &#8594;</span>
           </div>
         </a>
 
-        <a href="blog.html" class="card card-link">
+        <!-- Blog 3 -->
+        <a href="blog.html" class="card" style="text-decoration:none;color:inherit;display:block;">
           <div class="card__img-wrapper">
-            <img class="card__img lazy" data-src="assets/images/blog-3.jpg" src="assets/images/blog-3.jpg" alt="Blog 3" />
+            <img src="assets/images/blog-3.jpg" alt="French sauces article"
+                 class="card__img lazy" data-src="assets/images/blog-3.jpg" />
           </div>
           <div class="card__body">
             <div class="card__meta">
               <span class="badge badge-blue">Techniques</span>
-              <span class="card__info">Apr 10, 2025 &middot; 5 min read</span>
+              <span class="text-muted">Apr 10, 2025 &middot; 5 min read</span>
             </div>
-            <h3 class="card__title">Mastering the Five French Mother Sauces</h3>
-            <p class="card__excerpt">Once you know these five foundational sauces, you can make almost any classic French dish from scratch.</p>
+            <h3 class="card__title">
+              Mastering the Five French Mother Sauces
+            </h3>
+            <p class="card__excerpt">
+              Once you know these five foundational sauces, you can make almost
+              any classic French dish entirely from scratch.
+            </p>
+          </div>
+          <div class="card__footer">
+            <span class="text-muted" style="font-size:0.8rem;">Read More &#8594;</span>
           </div>
         </a>
 
-      </div>
+      </div><!-- /.index-blog-grid -->
 
-      <div class="section-cta">
-        <a href="blog.html" class="btn btn-outline">Read All Articles &rarr;</a>
+      <div class="text-center mt-5">
+        <a href="blog.html" class="btn btn-outline">Read All Articles &#8594;</a>
       </div>
 
     </div>
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        NEWSLETTER
-  ═══════════════════════════════ -->
-  <section class="newsletter-section" id="newsletter">
-    <div class="container">
-      <div class="newsletter-content">
-        <h2 class="newsletter-title">New Recipes, Every Week &#127860;</h2>
-        <p class="newsletter-subtitle">
-          Join 12,000+ food lovers getting fresh recipes and cooking tips delivered to their inbox.
-        </p>
-        <div class="newsletter-form">
-          <input
-            type="email"
-            id="newsletter-email"
-            class="form-control"
-            placeholder="your@email.com"
-            aria-label="Email address"
-            autocomplete="email"
-          />
-          <button class="btn btn-primary" id="newsletter-submit-btn" type="button">Subscribe</button>
-        </div>
-        <p id="newsletter-msg" class="newsletter-success hidden">
-          &#10003; You&rsquo;re in! Check your inbox for a welcome email.
-        </p>
+       .newsletter-section defined in layout.css
+       JS: initNewsletter() in dynamic_ui.js handles submit
+  ═══════════════════════════════════════════ -->
+  <section class="newsletter-section" id="newsletter" aria-labelledby="newsletter-title">
+    <div class="newsletter-section__content">
+
+      <h2 class="newsletter-section__title" id="newsletter-title">
+        New Recipes, Every Week &#127860;
+      </h2>
+      <p class="newsletter-section__subtitle">
+        Join 12,000+ food lovers getting fresh recipes and cooking tips
+        delivered straight to their inbox.
+      </p>
+
+      <div class="newsletter-form" role="form" aria-label="Newsletter signup">
+        <input
+          type="email"
+          id="newsletter-email"
+          class="newsletter-form__input"
+          placeholder="your@email.com"
+          aria-label="Email address"
+          autocomplete="email"
+        />
+        <button class="btn newsletter-form__btn" type="button" id="newsletter-submit-btn">
+          Subscribe
+        </button>
       </div>
+
+      <p id="newsletter-msg"
+         class="newsletter-success hidden"
+         aria-live="polite">
+        &#9989; You&rsquo;re in! Check your inbox for a welcome email.
+      </p>
+
     </div>
   </section>
 
 
-  <!-- ═══════════════════════════════
+  <!-- ═══════════════════════════════════════════
        FOOTER
-  ═══════════════════════════════ -->
-  <footer class="site-footer" id="site-footer">
+       .footer-grid .footer-col__title .footer-col__links
+       .footer-bottom .footer-social defined in layout.css
+  ═══════════════════════════════════════════ -->
+  <footer id="site-footer">
     <div class="container">
+
       <div class="footer-grid">
 
-        <!-- Brand -->
-        <div class="footer-brand">
-          <div class="footer-brand__logo">&#127859; RecipeHub</div>
-          <p class="footer-brand__desc">
+        <!-- Brand column -->
+        <div>
+          <p class="footer-col__title" style="font-size:1.2rem;">&#127859; RecipeHub</p>
+          <p style="font-size:0.875rem;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:var(--space-md);">
             Your go-to destination for discovering, saving, and sharing recipes
             from around the world. Cook with confidence, eat with joy.
           </p>
-          <div class="footer-social">
+          <div class="social-icons">
             <a href="#" aria-label="Facebook">
               <img src="assets/icons/facebook.png" alt="Facebook" />
             </a>
@@ -478,10 +677,10 @@
           </div>
         </div>
 
-        <!-- Explore -->
+        <!-- Explore column -->
         <div>
           <h3 class="footer-col__title">Explore</h3>
-          <ul class="footer-col__links">
+          <ul class="footer-col__links" style="list-style:none;">
             <li><a href="recipes.html">All Recipes</a></li>
             <li><a href="recipes.html?cuisine=egyptian">Egyptian</a></li>
             <li><a href="recipes.html?cuisine=italian">Italian</a></li>
@@ -490,10 +689,10 @@
           </ul>
         </div>
 
-        <!-- Tools -->
+        <!-- Tools column -->
         <div>
           <h3 class="footer-col__title">Tools</h3>
-          <ul class="footer-col__links">
+          <ul class="footer-col__links" style="list-style:none;">
             <li><a href="planner.html">Meal Planner</a></li>
             <li><a href="calculator.html">Ingredient Calculator</a></li>
             <li><a href="comparenutrition.html">Compare Nutrition</a></li>
@@ -502,10 +701,10 @@
           </ul>
         </div>
 
-        <!-- Account -->
+        <!-- Account column -->
         <div>
           <h3 class="footer-col__title">Account</h3>
-          <ul class="footer-col__links">
+          <ul class="footer-col__links" style="list-style:none;">
             <li><a href="auth.html">Login</a></li>
             <li><a href="auth.html">Register</a></li>
             <li><a href="contact.html">Contact Us</a></li>
@@ -513,19 +712,21 @@
           </ul>
         </div>
 
-      </div>
+      </div><!-- /.footer-grid -->
 
       <div class="footer-bottom">
         <span>&copy; 2025 RecipeHub &mdash; COM209 Internet Technology Project</span>
-        <span>Made with &hearts; by Mohamed Yasser&rsquo;s Team</span>
+        <span>Made with &#10084;&#65039; by Mohamed Yasser&rsquo;s Team</span>
       </div>
+
     </div>
   </footer>
 
 
-  <!-- ═══════════════════════════════
-       JAVASCRIPT
-  ═══════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT — external files only, in correct order
+       theme_switcher.js must be first (applies theme before paint)
+  ═══════════════════════════════════════════ -->
   <script src="js/theme_switcher.js"></script>
   <script src="js/main.js"></script>
   <script src="js/dynamic_ui.js"></script>
